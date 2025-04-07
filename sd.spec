@@ -19,7 +19,7 @@ current_release = subprocess.run(
 print("bundling Sundial version " + current_release)
 
 entitlements_file = Path(".") / "scripts" / "package" / "entitlements.plist"
-codesign_identity = os.environ.get("APPLE_PERSONALID", "").strip()
+codesign_identity ="3FA45F9078795A7555040371D3319CE586DF3737"
 if not codesign_identity:
     print("Environment variable APPLE_PERSONALID not set. Releases won't be signed.")
 
@@ -95,6 +95,7 @@ datas = [
     (sd_qt_location / "resources/sd-qt.desktop", "sd_qt/resources"),
     (sd_qt_location / "media", "sd_qt/media"),
     (sd_qt_location / "sd_qt/sd_desktop/resources", "sd_qt/sd_desktop/resources"),
+    (sd_qt_location / "sd_qt/sd_desktop/locales", "sd_qt/sd_desktop/locales")
 ]
 
 datas += dependent_datas  # Combine datas and dependent_datas
