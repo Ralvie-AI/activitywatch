@@ -163,7 +163,32 @@ package:
 	rm -f dist/Sundial/libfontconfig.so.1
 	rm -f dist/Sundial/libfreetype.so.6
 # Remove unnecessary files
+
+	mv dist/Sundial/sd-server dist/Sundial/sd-server-tmp 
+	mv dist/Sundial/sd-watcher-afk dist/Sundial/sd-watcher-afk-tmp 
+	mv dist/Sundial/sd-watcher-window dist/Sundial/sd-watcher-window-tmp
+
+	cp -rv dist/Sundial/sd-server-tmp/* dist/Sundial
+	cp -rv dist/Sundial/sd-watcher-afk-tmp/* dist/Sundial	
+	cp -rv dist/Sundial/sd-watcher-window-tmp/* dist/Sundial
+
+	rm -rfv dist/Sundial/sd-server-tmp
+	rm -rfv dist/Sundial/sd-watcher-afk-tmp
+	rm -rfv dist/Sundial/sd-watcher-window-tmp
+	
+	rm -rfv dist/Sundial/PySide6/qml
+	rm -rfv dist/Sundial/PIL
 	rm -rf dist/Sundial/pytz
+	rm -rf dist/Sundial/jsonschema
+	rm -rf dist/Sundial/jsonschema-4.19.1.dist-info
+	rm -rf dist/Sundial/keyring-25.0.0.dist-info
+	rm -rf dist/Sundial/menuarkupsafe
+	rm -rf dist/Sundial/werkzeug-2.3.7.dist-info
+	rm -rf dist/Sundial/importlib_metadata-6.8.0.dist-info
+	rm -rf dist/Sundial/cryptography-41.0.5.dist-info
+	rm -rf dist/Sundial/flask-2.3.3.dist-info
+	rm -rf dist/Sundial/attrs-23.1.0.dist-info
+	 
 # Builds zips and setups
 	bash scripts/package/package-all.sh
 
