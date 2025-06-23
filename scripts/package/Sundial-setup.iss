@@ -28,7 +28,7 @@ DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 PrivilegesRequired=lowest
-PrivilegesRequiredOverridesAllowed=dialog
+;PrivilegesRequiredOverridesAllowed=dialog
 OutputDir={#DistDir}
 OutputBaseFilename=Sundial-setup
 SetupIconFile="{#RootDir}\sd-qt\media\logo\logo.ico"
@@ -62,6 +62,8 @@ Source: "{#DistDir}\Sundial\*"; DestDir: "{app}"; Flags: ignoreversion recursesu
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\*"
 Type: filesandordirs; Name: "{userstartup}\{#MyAppName}.lnk"
+Type: dirifempty; Name: "{autopf}\{#MyAppName}"
+;Type: dirifempty; Name: "{userappdata}\{#MyAppName}"
 ; Add any additional uninstallation cleanup steps here, such as removing registry entries
  
 [Icons]
