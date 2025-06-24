@@ -188,6 +188,11 @@ package:
 	rm -rf dist/Sundial/cryptography-41.0.5.dist-info
 	rm -rf dist/Sundial/flask-2.3.3.dist-info
 	rm -rf dist/Sundial/attrs-23.1.0.dist-info
+	rm -rf dist/Sundial/PySide6/translations/*.qm
+	cp dist/Sundial/PySide6/translations/qtwebengine_locales/en-US.pak dist/Sundial/PySide6/translations/qtwebengine_locales/en-US.tmp
+	rm -rf dist/Sundial/PySide6/translations/qtwebengine_locales/*.pak 
+	cp dist/Sundial/PySide6/translations/qtwebengine_locales/en-US.tmp dist/Sundial/PySide6/translations/qtwebengine_locales/en-US.pak
+	rm -rf dist/Sundial/PySide6/translations/qtwebengine_locales/*.tmp
 	 
 # Builds zips and setups
 	bash scripts/package/package-all.sh
