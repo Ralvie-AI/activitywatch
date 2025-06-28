@@ -142,7 +142,7 @@ dist/Sundial.dmg: dist/Sundial.app
 
 dist/notarize:
 	./scripts/notarize.sh
-
+	
 package:
 	rm -rf dist
 	mkdir -p dist/Sundial
@@ -193,6 +193,8 @@ package:
 	rm -rf dist/Sundial/PySide6/translations/qtwebengine_locales/*.pak 
 	cp dist/Sundial/PySide6/translations/qtwebengine_locales/en-US.tmp dist/Sundial/PySide6/translations/qtwebengine_locales/en-US.pak
 	rm -rf dist/Sundial/PySide6/translations/qtwebengine_locales/*.tmp
+	rm -rf dist/Sundial/sd-qt.desktop
+	mv dist/Sundial/sd-qt.exe dist/Sundial/sd-main.exe
 	 
 # Builds zips and setups
 	bash scripts/package/package-all.sh
