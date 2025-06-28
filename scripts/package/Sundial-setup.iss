@@ -6,7 +6,7 @@
 #define MyAppVersion GetEnv('SD_VERSION')
 #define MyAppPublisher "Ralvie AI Inc,"
 ;#define MyAppURL "https://Sundial.net/"
-#define MyAppExeName "sd-qt.exe"
+#define MyAppExeName "sd-main.exe"
 #define RootDir "..\.."
 #define DistDir "..\..\dist"
 
@@ -55,7 +55,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
  
 [Files]
-Source: "{#DistDir}\Sundial\sd-qt.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#DistDir}\Sundial\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#DistDir}\Sundial\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
  
