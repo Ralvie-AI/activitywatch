@@ -11,7 +11,7 @@
 
 SHELL := /usr/bin/env bash
 
-SUBMODULES := sd-core sd-client sd-qt sd-server sd-watcher-afk sd-watcher-window
+SUBMODULES := sd-core sd-client sd-main sd-server sd-watcher-afk sd-watcher-window
 
 # Include extras if SD_EXTRAS is true
 ifeq ($(SD_EXTRAS),true)
@@ -62,7 +62,7 @@ build:
 # Installs things like desktop/menu shortcuts.
 # Might in the future configure autostart on the system.
 install:
-	make --directory=sd-qt install
+	make --directory=sd-main install
 # Installation is already happening in the `make build` step currently.
 # We might want to change this.
 # We should also add some option to install as user (pip3 install --user)
@@ -114,9 +114,9 @@ test-integration:
 	@echo "== Integration testing sd-server =="
 	@pytest ./scripts/tests/integration_tests.py ./sd-server/tests/ -v
 
-ICON := "sd-qt/media/logo/logo.png"
+ICON := "sd-main/media/logo/logo.png"
 
-sd-qt/media/logo/logo.png:
+sd-main/media/logo/logo.png:
 	mkdir -p build/MyIcon.iconset
 	sips -z 16 16     $(ICON) --out build/MyIcon.iconset/icon_16x16.png
 	sips -z 32 32     $(ICON) --out build/MyIcon.iconset/icon_16x16@2x.png
@@ -130,9 +130,9 @@ sd-qt/media/logo/logo.png:
 	cp				  $(ICON)       build/MyIcon.iconset/icon_512x512@2x.png
 	iconutil -c icns build/MyIcon.iconset
 	rm -R build/MyIcon.iconset
-	mv build/MyIcon.icns sd-qt/media/logo/logo.icns
+	mv build/MyIcon.icns sd-main/media/logo/logo.icns
 
-dist/Sundial.app: sd-qt/media/logo/logo.png
+dist/Sundial.app: sd-main/media/logo/logo.png
 	pyinstaller --clean --noconfirm sd.spec
 
 dist/Sundial.dmg: dist/Sundial.app
@@ -150,16 +150,16 @@ package:
 		make --directory=$$dir package; \
 		cp -r $$dir/dist/$$dir dist/Sundial; \
 	done
-# Move sd-qt to the root of the dist folder
-	mv dist/Sundial/sd-qt sd-qt-tmp
-	mv sd-qt-tmp/* dist/Sundial
-	rmdir sd-qt-tmp
+# Move sd-main to the root of the dist folder
+	mv dist/Sundial/sd-main sd-main-tmp
+	mv sd-main-tmp/* dist/Sundial
+	rmdir sd-main-tmp
 # Remove problem-causing binaries
 	rm -f dist/Sundial/libdrm.so.2       # see: https://github.com/ActivityWatch/activitywatch/issues/161
 	rm -f dist/Sundial/libharfbuzz.so.0  # see: https://github.com/ActivityWatch/activitywatch/issues/660#issuecomment-959889230
 # These should be provided by the distro itself
 # Had to be removed due to otherwise causing the error:
-#   sd-qt: symbol lookup error: /opt/activitywatch/libQt5XcbQpa.so.5: undefined symbol: FT_Get_Font_Format
+#   sd-main: symbol lookup error: /opt/activitywatch/libQt5XcbQpa.so.5: undefined symbol: FT_Get_Font_Format
 	rm -f dist/Sundial/libfontconfig.so.1
 	rm -f dist/Sundial/libfreetype.so.6
 # Remove unnecessary files

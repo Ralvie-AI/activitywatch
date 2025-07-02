@@ -27,14 +27,14 @@ sd_core_path = Path(os.path.dirname(sd_core.__file__))
 restx_path = Path(os.path.dirname(flask_restx.__file__))
 
 sds_location = Path("sd-server")
-sd_qt_location = Path("sd-qt")
+sd_main_location = Path("sd-main")
 sda_location = Path("sd-watcher-afk")
 sdw_location = Path("sd-watcher-window")
 
 if platform.system() == "Darwin":
-    icon = sd_qt_location / "media/logo/logo.icns"
+    icon = sd_main_location / "media/logo/logo.icns"
 else:
-    icon = sd_qt_location / "media/logo/logo.ico"
+    icon = sd_main_location / "media/logo/logo.ico"
 block_cipher = None
 
 extra_pathex = []
@@ -92,16 +92,18 @@ elif platform.system() == "Darwin":
     ]
 
 datas = [
-    (sd_qt_location / "resources/sd-qt.desktop", "sd_qt/resources"),
-    (sd_qt_location / "media", "sd_qt/media"),
-    (sd_qt_location / "sd_qt/sd_desktop/resources", "sd_qt/sd_desktop/resources"),
-    (sd_qt_location / "sd_qt/sd_desktop/locales", "sd_qt/sd_desktop/locales")
+    (sd_main_location / "resources/sd-main.desktop", "sd_main/resources"),
+    (sd_main_location / "media", "sd_main/media"),
+    (sd_main_location / "sd_main/sd_desktop/resources", "sd_main/sd_desktop/resources"),
+    (sd_main_location / "sd_main/sd_desktop/locales", "sd_main/sd_desktop/locales"),
+    (sd_main_location / "sd_main/sd_desktop/LICENSES", "LICENSES"),
+    (sd_main_location / "sd_main/sd_desktop/README.md", "."),
 ]
 
 datas += dependent_datas  # Combine datas and dependent_datas
 
-sd_qt_a = Analysis(
-    [sd_qt_location / "sd_qt/__main__.py"],
+sd_main_a = Analysis(
+    [sd_main_location / "sd_main/__main__.py"],
     pathex=[] + extra_pathex,
     binaries=None,
     datas=datas,
@@ -177,7 +179,7 @@ sd_watcher_window_a = Analysis(
 # the analysis paired with the script name and the bin name
 MERGE(
     (sd_server_a, "sd-server", "sd-server"),
-    (sd_qt_a, "sd-qt", "sd-qt"),
+    (sd_main_a, "sd-main", "sd-main"),
     (sd_watcher_afk_a, "sd-watcher-afk", "sd-watcher-afk"),
     (sd_watcher_window_a, "sd-watcher-window", "sd-watcher-window"),
 )
@@ -254,12 +256,12 @@ sds_coll = COLLECT(
     name="sd-server",
 )
 
-sdq_pyz = PYZ(sd_qt_a.pure, sd_qt_a.zipped_data, cipher=block_cipher)
+sdq_pyz = PYZ(sd_main_a.pure, sd_main_a.zipped_data, cipher=block_cipher)
 sdq_exe = EXE(
     sdq_pyz,
-    sd_qt_a.scripts,
+    sd_main_a.scripts,
     exclude_binaries=True,
-    name="sd-qt",
+    name="sd-main",
     debug=True,
     strip=False,
     upx=True,
@@ -270,12 +272,12 @@ sdq_exe = EXE(
 )
 sdq_coll = COLLECT(
     sdq_exe,
-    sd_qt_a.binaries,
-    sd_qt_a.zipfiles,
-    sd_qt_a.datas,
+    sd_main_a.binaries,
+    sd_main_a.zipfiles,
+    sd_main_a.datas,
     strip=False,
     upx=True,
-    name="sd-qt",
+    name="sd-main",
 )
 
 if platform.system() == "Darwin":
@@ -290,7 +292,7 @@ if platform.system() == "Darwin":
         version=current_release.lstrip("v"),
         info_plist={
             "NSPrincipalClass": "NSApplication",
-            "CFBundleExecutable": "MacOS/sd-qt",
+            "CFBundleExecutable": "MacOS/sd-main",
             "CFBundleIconFile": "logo.icns",
             "NSAppleEventsUsageDescription": "Please grant access to use Apple Events",
             # This could be set to a more specific version string (including the commit id, for example)
