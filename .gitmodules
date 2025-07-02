@@ -10,8 +10,8 @@
 [submodule "sd-watcher-afk"]
 	path = sd-watcher-afk
 	url = https://github.com/Ralvie-AI/aw-watcher-afk.git
-[submodule "sd-qt"]
-	path = sd-qt
+[submodule "sd-main"]
+	path = sd-main
 	url = https://github.com/Ralvie-AI/aw-qt.git
 [submodule "sd-watcher-window"]
 	path = sd-watcher-window
