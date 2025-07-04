@@ -14,10 +14,10 @@ chmod +x appimagetool-x86_64.AppImage
 # create AppRun
 echo '#!/bin/sh
 DIR="$(dirname "$(readlink -f "${0}")")"
-"${DIR}"/sd-qt "$@"' > Sundial/AppRun
+"${DIR}"/sd-main "$@"' > Sundial/AppRun
 chmod a+x ./Sundial/AppRun
 
 # build appimage
-./linuxdeploy-x86_64.AppImage --appdir Sundial --executable ./Sundial/sd-qt --output appimage --desktop-file ./Sundial/sd-qt.desktop --icon-file ./Sundial/media/logo/logo.png --icon-filename Sundial
+./linuxdeploy-x86_64.AppImage --appdir Sundial --executable ./Sundial/sd-main --output appimage --desktop-file ./Sundial/sd-main.desktop --icon-file ./Sundial/media/logo/logo.png --icon-filename Sundial
 APPIMAGE_FILE=`ls -1 | grep AppImage| grep -i Sundial`
 cp -v $APPIMAGE_FILE ./dist/Sundial-linux-x86_64.AppImage

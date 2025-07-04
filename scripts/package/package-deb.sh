@@ -46,9 +46,9 @@ jdupes -L -r -S -Xsize-:1K $PKGDIR/opt/
 sudo chown -R root:root $PKGDIR
 
 # Prepare the .desktop file
-sudo sed -i 's!Exec=sd-qt!Exec=/opt/Sundial/sd-qt!' $PKGDIR/opt/Sundial/sd-qt.desktop
-sudo cp $PKGDIR/opt/Sundial/sd-qt.desktop $PKGDIR/etc/xdg/autostart/
-sudo cp $PKGDIR/opt/Sundial/sd-qt.desktop $PKGDIR/usr/share/applications/
+sudo sed -i 's!Exec=sd-main!Exec=/opt/Sundial/sd-main!' $PKGDIR/opt/Sundial/sd-main.desktop
+sudo cp $PKGDIR/opt/Sundial/sd-main.desktop $PKGDIR/etc/xdg/autostart/
+sudo cp $PKGDIR/opt/Sundial/sd-main.desktop $PKGDIR/usr/share/applications/
 
 dpkg-deb --build $PKGDIR
 sudo mv Sundial${VERSION_NUM}.deb dist/Sundial-${VERSION}-linux-x86_64.deb
