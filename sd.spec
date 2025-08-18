@@ -69,8 +69,8 @@ dependent_datas = []
 
 if platform.system() == "Windows":
     dependent_datas = [
-        (os.path.join(spec_dir, "libcrypto-1_1-x64.dll"), '.'),
-        (os.path.join(spec_dir, "sqlcipher.dll"), '.'),
+        (os.path.join(spec_dir, "scripts/dlls/libcrypto-1_1-x64.dll"), '.'),
+        (os.path.join(spec_dir, "scripts/dlls/sqlcipher.dll"), '.'),
     ]
 elif platform.system() == "Darwin":
     dependent_datas = [
