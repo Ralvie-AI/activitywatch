@@ -5,3 +5,4 @@ charset-normalizer==3.3.1
 pyqtdarktheme
 PySide6
 sqlcipher3-wheels
+uiautomation
