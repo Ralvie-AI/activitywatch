@@ -166,18 +166,22 @@ package:
 
 	mv dist/Sundial/sd-server dist/Sundial/sd-server-tmp 
 	mv dist/Sundial/sd-watcher-afk dist/Sundial/sd-watcher-afk-tmp 
-	mv dist/Sundial/sd-watcher-window dist/Sundial/sd-watcher-window-tmp
 
-	cp -rv dist/Sundial/sd-server-tmp/* dist/Sundial
-	cp -rv dist/Sundial/sd-watcher-afk-tmp/* dist/Sundial	
-	cp -rv dist/Sundial/sd-watcher-window-tmp/* dist/Sundial
+	@while ! mv dist/Sundial/sd-watcher-window dist/Sundial/sd-watcher-window-tmp; do \
+		echo "Move failed, retrying..."; \
+		sleep 1; \
+	done
 
-	rm -rfv dist/Sundial/sd-server-tmp
-	rm -rfv dist/Sundial/sd-watcher-afk-tmp
-	rm -rfv dist/Sundial/sd-watcher-window-tmp
+	cp -r dist/Sundial/sd-server-tmp/* dist/Sundial
+	cp -r dist/Sundial/sd-watcher-afk-tmp/* dist/Sundial	
+	cp -r dist/Sundial/sd-watcher-window-tmp/* dist/Sundial
+
+	rm -rf dist/Sundial/sd-server-tmp
+	rm -rf dist/Sundial/sd-watcher-afk-tmp
+	rm -rf dist/Sundial/sd-watcher-window-tmp
 	
-	rm -rfv dist/Sundial/PySide6/qml
-	rm -rfv dist/Sundial/PIL
+	rm -rf dist/Sundial/PySide6/qml
+	rm -rf dist/Sundial/PIL
 	rm -rf dist/Sundial/pytz
 	rm -rf dist/Sundial/jsonschema
 	rm -rf dist/Sundial/jsonschema-4.19.1.dist-info
