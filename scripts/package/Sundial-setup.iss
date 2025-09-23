@@ -82,6 +82,31 @@ Type: filesandordirs; Name: "{app}\"
 [Code]
 var
   InstalledPathArray: array of String;
+
+function CheckWindows(): Boolean;
+var
+  WinVer: TWindowsVersion;
+begin
+  GetWindowsVersionEx(WinVer);
+
+  // if (WinVer.Major = 10) and (WinVer.Build >= 22000) then
+  // Windows 10 (10.0), require Build >= 17763 (1809)
+  if (WinVer.Major = 10) and (WinVer.Minor = 0) and (WinVer.Build < 17763) then
+  begin
+    MsgBox(
+      'This application requires Windows 10 version 1809 (build 17763) or later.'#13#10 +
+      'Your system build: ' + IntToStr(WinVer.Build) + #13#10 +
+      'Please upgrade Windows and try again.',
+      mbCriticalError, MB_OK
+    );
+    Result := False; // abort
+  end
+  else
+  begin
+    Result := True; // allow
+  end;
+end;
+
   
 /////////////////////////////////////////////////////////////////////
 // The following uninstall code was found at:
@@ -240,22 +265,35 @@ function InitializeSetup(): Boolean;
 var
   MsgResult: Integer;
 begin
+  
+
+  // Always check Windows version first
+  if not CheckWindows() then
+  begin
+    Result := False;
+    Exit; // abort setup immediately
+  end;
+
   InstalledPathArray := GetUninstallStrings();
-  if Length(InstalledPathArray) > 0  then
-	begin
-		MsgResult := MsgBox('An older version of Sundial  has been installed. It will be uninstalled before proceeding.', mbInformation, MB_OKCancel);
-		if MsgResult <> IDOK then
-		begin
-			Abort;  // Abort if the user cancels or closes the dialog
-			Result := False;
-		end;
-	
-		StopApplication();
-		UnInstallOldVersions();
-		Result := True;		
-	end
+
+  if Length(InstalledPathArray) > 0 then
+  begin
+    MsgResult := MsgBox('An older version of App has been installed. It will be uninstalled before proceeding.',
+                        mbInformation, MB_OKCancel);
+
+    if MsgResult <> IDOK then
+    begin
+      Abort;   // abort if user cancels
+      Result := False;
+      Exit;
+    end;
+
+    StopApplication();
+    UnInstallOldVersions();
+    Result := True;		
+  end
   else
-	begin 
-	 Result := True;
-	end;
+  begin 
+    Result := True;
+  end;
 end;
