@@ -203,6 +203,9 @@ package:
 # Builds zips and setups
 	bash scripts/package/package-all.sh
 
+sign:
+	bash scripts/package/package-signed.sh
+
 clean:
 	rm -rf build dist
 
