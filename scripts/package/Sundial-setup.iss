@@ -261,6 +261,17 @@ begin
   end;
 end;
 
+procedure DeleteKeyringPassFile();
+var
+  FilePath: string;
+begin
+  FilePath := ExpandConstant('{localappdata}\Python Keyring\keyring_pass.cfg');
+  if FileExists(FilePath) then
+  begin
+    DeleteFile(FilePath);
+  end;  
+end;
+
 function InitializeSetup(): Boolean;	
 var
   MsgResult: Integer;
@@ -290,6 +301,7 @@ begin
 
     StopApplication();
     UnInstallOldVersions();
+    DeleteKeyringPassFile();
     Result := True;		
   end
   else
