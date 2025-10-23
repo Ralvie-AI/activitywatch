@@ -52,7 +52,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkedonce
  
 [Files]
 Source: "{#DistDir}\Sundial\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
