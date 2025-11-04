@@ -11,7 +11,7 @@
 
 SHELL := /usr/bin/env bash
 
-SUBMODULES := sd-core sd-client sd-qt sd-server sd-watcher-afk sd-watcher-window
+SUBMODULES := sd-core sd-client sd-qt sd-server sd-watcher-afk sd-watcher-window sd-screen-shot
 
 # Include extras if sd_EXTRAS is true
 ifeq ($(sd_EXTRAS),true)
@@ -166,6 +166,7 @@ package:
 
 	mv dist/Sundial/sd-server dist/Sundial/sd-server-tmp 
 	mv dist/Sundial/sd-watcher-afk dist/Sundial/sd-watcher-afk-tmp 
+	mv dist/Sundial/sd-screen-shot dist/Sundial/sd-screen-shot-tmp 
 
 	@while ! mv dist/Sundial/sd-watcher-window dist/Sundial/sd-watcher-window-tmp; do \
 		echo "Move failed, retrying..."; \
@@ -175,10 +176,12 @@ package:
 	cp -r dist/Sundial/sd-server-tmp/* dist/Sundial
 	cp -r dist/Sundial/sd-watcher-afk-tmp/* dist/Sundial	
 	cp -r dist/Sundial/sd-watcher-window-tmp/* dist/Sundial
+	cp -r dist/Sundial/sd-screen-shot-tmp/* dist/Sundial
 
 	rm -rf dist/Sundial/sd-server-tmp
 	rm -rf dist/Sundial/sd-watcher-afk-tmp
 	rm -rf dist/Sundial/sd-watcher-window-tmp
+	rm -rf dist/Sundial/sd-screen-shot-tmp
 	
 	rm -rf dist/Sundial/PySide6/qml
 	rm -rf dist/Sundial/PIL
