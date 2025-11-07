@@ -232,6 +232,12 @@ begin
     ProcessesStopped := True;
   end;
  
+  if IsProcessRunning('sd-screen-shot.exe') then
+  begin
+    Exec('taskkill', '/F /IM sd-screen-shot.exe', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    ProcessesStopped := True;
+  end;
+
   // Show message only if processes were stopped
   if ProcessesStopped then
   begin
