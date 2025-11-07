@@ -166,9 +166,13 @@ package:
 
 	mv dist/Sundial/sd-server dist/Sundial/sd-server-tmp 
 	mv dist/Sundial/sd-watcher-afk dist/Sundial/sd-watcher-afk-tmp 
-	mv dist/Sundial/sd-screen-shot dist/Sundial/sd-screen-shot-tmp 
 
 	@while ! mv dist/Sundial/sd-watcher-window dist/Sundial/sd-watcher-window-tmp; do \
+		echo "Move failed, retrying..."; \
+		sleep 1; \
+	done
+
+	@while ! mv dist/Sundial/sd-screen-shot dist/Sundial/sd-screen-shot-tmp; do \
 		echo "Move failed, retrying..."; \
 		sleep 1; \
 	done
