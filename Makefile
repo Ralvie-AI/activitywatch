@@ -11,7 +11,7 @@
 
 SHELL := /usr/bin/env bash
 
-SUBMODULES := sd-core sd-client sd-main sd-server sd-watcher-afk sd-watcher-window
+SUBMODULES := sd-core sd-client sd-main sd-server sd-watcher-afk sd-watcher-window sd-screen-shot
 
 # Include extras if SD_EXTRAS is true
 ifeq ($(SD_EXTRAS),true)
