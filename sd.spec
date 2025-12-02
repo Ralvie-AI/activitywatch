@@ -31,6 +31,7 @@ sd_main_location = Path("sd-main")
 sda_location = Path("sd-watcher-afk")
 sdw_location = Path("sd-watcher-window")
 
+
 if platform.system() == "Darwin":
     icon = sd_main_location / "media/logo/logo.icns"
 else:
@@ -174,6 +175,19 @@ sd_watcher_window_a = Analysis(
     cipher=block_cipher,
 )
 
+sd_screen_shot_a = Analysis(
+    ["sd-screen-shot/sd_screen_shot/__main__.py"],
+    pathex=[],
+    binaries=None,
+    datas=None,
+    hiddenimports=[],
+    hookspath=[],
+    runtime_hooks=[],
+    excludes=[],
+    cipher=block_cipher,
+)
+
+
 # https://pythonhosted.org/PyInstaller/spec-files.html#multipackage-bundles
 # MERGE takes a bit weird arguments, it wants tuples which consists of
 # the analysis paired with the script name and the bin name
@@ -280,12 +294,45 @@ sdq_coll = COLLECT(
     name="sd-main",
 )
 
+sd_screen_shot_pyz = PYZ(
+    sd_screen_shot_a.pure,
+    sd_screen_shot_a.zipped_data,
+    cipher=block_cipher
+)
+
+sd_screen_shot_exe = EXE(
+    sd_screen_shot_pyz,
+    sd_screen_shot_a.scripts,
+    exclude_binaries=True,
+    name="sd-screen-shot",
+    debug=False,
+    strip=False,
+    upx=True,
+    console=True,
+    entitlements_file=entitlements_file,
+    codesign_identity=codesign_identity,
+)
+
+sd_screen_shot_coll = COLLECT(
+    sd_screen_shot_exe,
+    sd_screen_shot_a.binaries,
+    sd_screen_shot_a.zipfiles,
+    sd_screen_shot_a.datas,
+    strip=False,
+    upx=True,
+    name="sd-screen-shot",
+)
+
+
+
+
 if platform.system() == "Darwin":
     app = BUNDLE(
         sdq_coll,
         sdw_coll,
         sda_coll,
         sds_coll,
+        sd_screen_shot_coll,
         name="Sundial.app",
         icon=icon,
         bundle_identifier="net.ralvie.Sundial",
