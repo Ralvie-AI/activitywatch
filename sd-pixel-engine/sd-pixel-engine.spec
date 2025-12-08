@@ -1,6 +1,6 @@
 block_cipher = None
 
-a = Analysis(['sd_screen_shot/__main__.py'],
+a = Analysis(['sd_pixel_engine/__main__.py'],
              pathex=[],
              binaries=None,
              datas=None,
@@ -18,7 +18,7 @@ pyz = PYZ(a.pure, a.zipped_data,
 exe = EXE(pyz,
           a.scripts,
           exclude_binaries=True,
-          name='sd-screen-shot',
+          name='sd-pixel-engine',
           contents_directory=".",
           debug=False,
           strip=False,
@@ -31,4 +31,4 @@ coll = COLLECT(exe,
                a.datas,
                strip=False,
                upx=True,
-               name='sd-screen-shot')
+               name='sd-pixel-engine')
