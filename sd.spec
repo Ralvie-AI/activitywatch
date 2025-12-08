@@ -175,8 +175,8 @@ sd_watcher_window_a = Analysis(
     cipher=block_cipher,
 )
 
-sd_screen_shot_a = Analysis(
-    ["sd-screen-shot/sd_screen_shot/__main__.py"],
+sd_pixel_engine_a = Analysis(
+    ["sd-pixel-engine/sd_pixel_engine/__main__.py"],
     pathex=[],
     binaries=None,
     datas=None,
@@ -294,17 +294,17 @@ sdq_coll = COLLECT(
     name="sd-main",
 )
 
-sd_screen_shot_pyz = PYZ(
-    sd_screen_shot_a.pure,
-    sd_screen_shot_a.zipped_data,
+sd_pixel_engine_pyz = PYZ(
+    sd_pixel_engine_a.pure,
+    sd_pixel_engine_a.zipped_data,
     cipher=block_cipher
 )
 
-sd_screen_shot_exe = EXE(
-    sd_screen_shot_pyz,
-    sd_screen_shot_a.scripts,
+sd_pixel_engine_exe = EXE(
+    sd_pixel_engine_pyz,
+    sd_pixel_engine_a.scripts,
     exclude_binaries=True,
-    name="sd-screen-shot",
+    name="sd-pixel-engine",
     debug=False,
     strip=False,
     upx=True,
@@ -313,14 +313,14 @@ sd_screen_shot_exe = EXE(
     codesign_identity=codesign_identity,
 )
 
-sd_screen_shot_coll = COLLECT(
-    sd_screen_shot_exe,
-    sd_screen_shot_a.binaries,
-    sd_screen_shot_a.zipfiles,
-    sd_screen_shot_a.datas,
+sd_pixel_engine_coll = COLLECT(
+    sd_pixel_engine_exe,
+    sd_pixel_engine_a.binaries,
+    sd_pixel_engine_a.zipfiles,
+    sd_pixel_engine_a.datas,
     strip=False,
     upx=True,
-    name="sd-screen-shot",
+    name="sd-pixel-engine",
 )
 
 
@@ -332,7 +332,7 @@ if platform.system() == "Darwin":
         sdw_coll,
         sda_coll,
         sds_coll,
-        sd_screen_shot_coll,
+        sd_pixel_engine_coll,
         name="Sundial.app",
         icon=icon,
         bundle_identifier="net.ralvie.Sundial",
