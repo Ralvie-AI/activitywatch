@@ -41,30 +41,33 @@ class ScreenShot:
     
     def _generate_daily_times(self):
         """
-        Return list of 'HH:MM' strings for schedule module.
+        Returns a list of 'HH:MM' strings for a continuous schedule 
+        between two times, anchored strictly at the start time.
         """
         today = datetime.now().date()
 
-        start_dt = datetime.combine(today, self.start_time)
+        interval_minutes = 60 / self.times_per_hour
+        interval = timedelta(minutes=interval_minutes)
+        
+        current_dt = datetime.combine(today, self.start_time)
         end_dt = datetime.combine(today, self.end_time)
 
-        interval = timedelta(minutes=60 / self.times_per_hour)
+        # Handle schedules that cross midnight (optional, but good practice)
+        if end_dt < current_dt:
+            end_dt += timedelta(days=1)
+
         schedule_times = []
 
-        current = start_dt
-        while current <= end_dt:
-            for i in range(self.times_per_hour):
-                t = current + i * interval
-                if start_dt <= t <= end_dt:
-                    # logger.info(f"type => {type(t.strftime('%H:%M'))} => {t.strftime('%H:%M')}")
-                    tmp_time = t.strftime("%H:%M")
-                    if tmp_time not in schedule_times:
-                        schedule_times.append(tmp_time)
-            current = (current + timedelta(hours=1)).replace(
-                minute=0, second=0, microsecond=0
-            )
+        while current_dt <= end_dt:
+            # Add the current time string to the list
+            schedule_times.append(current_dt.strftime("%H:%M"))
+            
+            # Advance to the next time slot
+            current_dt += interval
 
-        return schedule_times
+        return schedule_times    
+
+        
 
     def run(self):
         logger.info("Screenshot scheduler started using schedule module")
@@ -90,7 +93,6 @@ class ScreenShot:
                 logger.info("Generated today's scheduled screenshot times:")
                 logger.info(f"Times => {times}")
                 for t in times:
-                    logger.info(f" - {t}")
                     schedule.every().day.at(t).do(self._scheduled_job)
 
             # run jobs
@@ -122,7 +124,12 @@ class ScreenShot:
         return output_file
 
     def _scheduled_job(self):
-        try:
+        try:           
+            now_time = datetime.now().time()
+            if not (self.start_time <= now_time <= self.end_time):               
+                logger.warning(f"Job triggered outside of schedule time: {now_time}")
+                return
+            
             logger.info("Scheduled screenshot triggered")
 
             screenshot_path = self._take_screenshot()
@@ -133,8 +140,9 @@ class ScreenShot:
             }
 
             response = requests.post(self.server_url, json=payload)
+            response.raise_for_status() # Raise an exception for bad status codes
             logger.info(f"Upload response => {response.json()}")
 
-        except Exception as e:
-            logger.error(f"Error in scheduled job: {e}")    
+        except requests.exceptions.RequestException as req_e:
+            logger.error(f"Error during API request: {req_e}")  
 
