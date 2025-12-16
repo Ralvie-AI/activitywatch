@@ -62,8 +62,7 @@ def main():
         days=args.days,
         is_idle_screenshot=args.is_idle_screenshot
     )
-
-    screenshot.run()
+    
     if args.tracking_interval == 0:
         screenshot.run_always()
     else:
