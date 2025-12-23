@@ -120,13 +120,17 @@ class ScreenShot:
         output_file = f"{screenshot_folder}/screenshot_{timestamp}.png"
 
         with mss() as sct:
+            # for i, m in enumerate(sct.monitors):
+            #     logger.info(f"Monitor {i}: {m}")
             sct.shot(output=output_file)
 
         return output_file
 
     def _scheduled_job(self):
         try:           
-            now_time = datetime.now().time()
+            # now_time = datetime.now().time()
+            now_time = datetime.now().replace(microsecond=0).time()
+            logger.info(f"now_time {now_time}")
             if not (self.start_time <= now_time <= self.end_time):               
                 logger.warning(f"Job triggered outside of schedule time: {now_time}")
                 return
