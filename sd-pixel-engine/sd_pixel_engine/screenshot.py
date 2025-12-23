@@ -98,7 +98,7 @@ class ScreenShot:
 
             # run jobs
             schedule.run_pending()
-            time_sleep(1)
+            # time_sleep(1)
 
    
 
