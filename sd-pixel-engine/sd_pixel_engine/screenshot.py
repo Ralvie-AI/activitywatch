@@ -80,19 +80,22 @@ class ScreenShot:
     
     def _log_today_schedule(self, now: datetime):
         slots = []
-        current = self._next_run_datetime(
-            datetime.combine(now.date(), self.start_time)
-        )
 
+        current = datetime.combine(now.date(), self.start_time)
         today_end = datetime.combine(now.date(), self.end_time)
+
+        # cross-midnight
         if self.end_time <= self.start_time:
             today_end += timedelta(days=1)
 
+        interval = timedelta(seconds=self.interval)
+
         while current <= today_end:
             slots.append(current.strftime("%H:%M:%S"))
-            current += timedelta(seconds=self.interval)
+            current += interval
 
         logger.info(f"Times => {slots}")
+
     
     def run(self):
         logger.info("Screenshot scheduler started (cross-midnight safe)")
