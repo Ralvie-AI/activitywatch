@@ -188,7 +188,6 @@ package:
 	rm -rf dist/Sundial/sd-pixel-engine-tmp
 	
 	rm -rf dist/Sundial/PySide6/qml
-	rm -rf dist/Sundial/PIL
 	rm -rf dist/Sundial/pytz
 	rm -rf dist/Sundial/jsonschema
 	rm -rf dist/Sundial/jsonschema-4.19.1.dist-info
