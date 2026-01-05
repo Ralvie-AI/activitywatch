@@ -8,6 +8,7 @@ import signal
 from datetime import datetime, time, timedelta, timezone
 
 from mss import mss
+from PIL import Image
 import requests
 import subprocess
 
@@ -156,7 +157,16 @@ class ScreenShot:
         with mss() as sct:
             # for i, m in enumerate(sct.monitors):
             #     logger.info(f"Monitor {i}: {m}")
-            sct.shot(output=output_file)
+            # sct.shot(output=output_file)
+            monitor = sct.monitors[0]  # all monitors combined
+            screenshot = sct.grab(monitor)
+
+            img = Image.frombytes(
+                "RGB",
+                screenshot.size,
+                screenshot.rgb
+            )
+            img.save(output_file)
 
         return output_file
 
