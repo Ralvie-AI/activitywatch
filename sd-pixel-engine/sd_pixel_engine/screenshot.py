@@ -183,7 +183,13 @@ class ScreenShot:
             logger.info("Scheduled screenshot triggered")
 
             screenshot_path = self._take_screenshot()
-            capture_time =  datetime.now(timezone.utc)
+            file_mtime = datetime.fromtimestamp(
+                os.path.getmtime(screenshot_path),
+                timezone.utc
+            )
+            capture_time = file_mtime
+            # capture_time =  datetime.now(timezone.utc)
+
 
             payload = {
                 'file_location': screenshot_path,
@@ -238,7 +244,12 @@ class ScreenShot:
                 logger.info("Taking anchored screenshot")
 
                 screenshot_path = self._take_screenshot()
-                capture_time = datetime.now(timezone.utc)
+                file_mtime = datetime.fromtimestamp(
+                os.path.getmtime(screenshot_path),
+                timezone.utc
+                )
+                capture_time = file_mtime
+                # capture_time = datetime.now(timezone.utc)
                 payload = {
                     "file_location": screenshot_path,
                     "is_idle_screenshot": self.is_idle_screenshot,
