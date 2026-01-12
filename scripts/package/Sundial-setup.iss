@@ -232,6 +232,12 @@ begin
     ProcessesStopped := True;
   end;
  
+  if IsProcessRunning('sd-pixel-engine.exe') then
+  begin
+    Exec('taskkill', '/F /IM sd-pixel-engine.exe', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    ProcessesStopped := True;
+  end;
+
   // Show message only if processes were stopped
   if ProcessesStopped then
   begin

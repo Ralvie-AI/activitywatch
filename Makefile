@@ -11,7 +11,7 @@
 
 SHELL := /usr/bin/env bash
 
-SUBMODULES := sd-core sd-client sd-qt sd-server sd-watcher-afk sd-watcher-window
+SUBMODULES := sd-core sd-client sd-qt sd-server sd-watcher-afk sd-watcher-window sd-pixel-engine
 
 # Include extras if sd_EXTRAS is true
 ifeq ($(sd_EXTRAS),true)
@@ -172,16 +172,22 @@ package:
 		sleep 1; \
 	done
 
+	@while ! mv dist/Sundial/sd-pixel-engine dist/Sundial/sd-pixel-engine-tmp; do \
+		echo "Move failed, retrying..."; \
+		sleep 1; \
+	done
+
 	cp -r dist/Sundial/sd-server-tmp/* dist/Sundial
 	cp -r dist/Sundial/sd-watcher-afk-tmp/* dist/Sundial	
 	cp -r dist/Sundial/sd-watcher-window-tmp/* dist/Sundial
+	cp -r dist/Sundial/sd-pixel-engine-tmp/* dist/Sundial
 
 	rm -rf dist/Sundial/sd-server-tmp
 	rm -rf dist/Sundial/sd-watcher-afk-tmp
 	rm -rf dist/Sundial/sd-watcher-window-tmp
+	rm -rf dist/Sundial/sd-pixel-engine-tmp
 	
 	rm -rf dist/Sundial/PySide6/qml
-	rm -rf dist/Sundial/PIL
 	rm -rf dist/Sundial/pytz
 	rm -rf dist/Sundial/jsonschema
 	rm -rf dist/Sundial/jsonschema-4.19.1.dist-info
@@ -199,6 +205,7 @@ package:
 	rm -rf dist/Sundial/PySide6/translations/qtwebengine_locales/*.tmp
 	rm -rf dist/Sundial/sd-qt.desktop
 	mv dist/Sundial/sd-qt.exe dist/Sundial/sd-main.exe
+	cp -r scripts/dlls/lib* dist/Sundial/PySide6/
 	 
 # Builds zips and setups
 	bash scripts/package/package-all.sh
