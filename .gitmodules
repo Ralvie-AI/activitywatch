@@ -22,6 +22,3 @@
 [submodule "sd-watcher-input"]
 	path = sd-watcher-input
 	url = https://github.com/Ralvie-AI/aw-watcher-input.git
-[submodule "sd-pixel-engine"]
-	path = sd-pixel-engine
-	url = https://github.com/Ralvie-AI/sd-pixel-engine.git
