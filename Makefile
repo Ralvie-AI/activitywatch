@@ -214,6 +214,7 @@ package:
 	rm -rf dist/Sundial/sd-qt.desktop
 	mv dist/Sundial/sd-qt.exe dist/Sundial/sd-main.exe
 	cp -r scripts/dlls/lib* dist/Sundial/PySide6/
+	cp -r scripts/rapidocr dist/Sundial/rapidocr
 	 
 # Builds zips and setups
 	bash scripts/package/package-all.sh
