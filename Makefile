@@ -164,8 +164,15 @@ package:
 	rm -f dist/Sundial/libfreetype.so.6
 # Remove unnecessary files
 
-	mv dist/Sundial/sd-server dist/Sundial/sd-server-tmp 
-	mv dist/Sundial/sd-watcher-afk dist/Sundial/sd-watcher-afk-tmp 
+	@while ! mv dist/Sundial/sd-server dist/Sundial/sd-server-tmp; do \
+		echo "Move failed, retrying..."; \
+		sleep 1; \
+	done
+
+	@while ! mv dist/Sundial/sd-watcher-afk dist/Sundial/sd-watcher-afk-tmp; do \
+		echo "Move failed, retrying..."; \
+		sleep 1; \
+	done
 
 	@while ! mv dist/Sundial/sd-watcher-window dist/Sundial/sd-watcher-window-tmp; do \
 		echo "Move failed, retrying..."; \
@@ -176,6 +183,7 @@ package:
 		echo "Move failed, retrying..."; \
 		sleep 1; \
 	done
+	
 
 	cp -r dist/Sundial/sd-server-tmp/* dist/Sundial
 	cp -r dist/Sundial/sd-watcher-afk-tmp/* dist/Sundial	
