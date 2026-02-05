@@ -46,9 +46,9 @@ jaraco.classes==3.3.0
 jaraco.context==4.3.0
 jaraco.functools==4.0.0
 Jinja2==3.1.2
-jsonschema==4.19.1
+jsonschema<=4.17.3
 jsonschema-specifications==2023.7.1
-keyring==25.0.0
+keyring<25.0.0
 keyrings.alt==5.0.0
 lxml==5.1.0
 MarkupSafe==2.1.3
