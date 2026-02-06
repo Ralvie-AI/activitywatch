@@ -148,12 +148,12 @@ package:
 	mkdir -p dist/Sundial
 	for dir in $(PACKAGEABLES); do \
 		make --directory=$$dir package; \
-		cp -r $$dir/dist/$$dir dist/Sundial; \
+		cp -r $$dir/dist/$$dir/* dist/Sundial; \
 	done
 # Move sd-qt to the root of the dist folder
-	mv dist/Sundial/sd-qt sd-qt-tmp
-	mv sd-qt-tmp/* dist/Sundial
-	rmdir sd-qt-tmp
+# 	mv dist/Sundial/sd-qt sd-qt-tmp
+# 	mv sd-qt-tmp/* dist/Sundial
+# 	rmdir sd-qt-tmp
 # Remove problem-causing binaries
 	rm -f dist/Sundial/libdrm.so.2       # see: https://github.com/Sundial/Sundial/issues/161
 	rm -f dist/Sundial/libharfbuzz.so.0  # see: https://github.com/Sundial/Sundial/issues/660#issuecomment-959889230
@@ -164,36 +164,36 @@ package:
 	rm -f dist/Sundial/libfreetype.so.6
 # Remove unnecessary files
 
-	@while ! mv dist/Sundial/sd-server dist/Sundial/sd-server-tmp; do \
-		echo "Move failed, retrying..."; \
-		sleep 1; \
-	done
+# 	@while ! mv dist/Sundial/sd-server/* dist/Sundial/; do \
+# 		echo "Move failed, retrying..."; \
+# 		sleep 1; \
+# 	done
 
-	@while ! mv dist/Sundial/sd-watcher-afk dist/Sundial/sd-watcher-afk-tmp; do \
-		echo "Move failed, retrying..."; \
-		sleep 1; \
-	done
+# 	@while ! mv dist/Sundial/sd-watcher-afk/* dist/Sundial/; do \
+# 		echo "Move failed, retrying..."; \
+# 		sleep 1; \
+# 	done
 
-	@while ! mv dist/Sundial/sd-watcher-window dist/Sundial/sd-watcher-window-tmp; do \
-		echo "Move failed, retrying..."; \
-		sleep 1; \
-	done
+# 	@while ! mv dist/Sundial/sd-watcher-window/* dist/Sundial/; do \
+# 		echo "Move failed, retrying..."; \
+# 		sleep 1; \
+# 	done
 
-	@while ! mv dist/Sundial/sd-pixel-engine dist/Sundial/sd-pixel-engine-tmp; do \
-		echo "Move failed, retrying..."; \
-		sleep 1; \
-	done
+# 	@while ! mv dist/Sundial/sd-pixel-engine/* dist/Sundial/; do \
+# 		echo "Move failed, retrying..."; \
+# 		sleep 1; \
+# 	done
 	
 
-	cp -r dist/Sundial/sd-server-tmp/* dist/Sundial
-	cp -r dist/Sundial/sd-watcher-afk-tmp/* dist/Sundial	
-	cp -r dist/Sundial/sd-watcher-window-tmp/* dist/Sundial
-	cp -r dist/Sundial/sd-pixel-engine-tmp/* dist/Sundial
+# 	cp -r dist/Sundial/sd-server-tmp/* dist/Sundial
+# 	cp -r dist/Sundial/sd-watcher-afk-tmp/* dist/Sundial	
+# 	cp -r dist/Sundial/sd-watcher-window-tmp/* dist/Sundial
+# 	cp -r dist/Sundial/sd-pixel-engine-tmp/* dist/Sundial
 
-	rm -rf dist/Sundial/sd-server-tmp
-	rm -rf dist/Sundial/sd-watcher-afk-tmp
-	rm -rf dist/Sundial/sd-watcher-window-tmp
-	rm -rf dist/Sundial/sd-pixel-engine-tmp
+# 	rm -rf dist/Sundial/sd-server-tmp
+# 	rm -rf dist/Sundial/sd-watcher-afk-tmp
+# 	rm -rf dist/Sundial/sd-watcher-window-tmp
+# 	rm -rf dist/Sundial/sd-pixel-engine-tmp
 	
 	rm -rf dist/Sundial/PySide6/qml
 	rm -rf dist/Sundial/pytz
