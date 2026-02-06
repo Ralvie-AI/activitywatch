@@ -213,10 +213,8 @@ package:
 	rm -rf dist/Sundial/PySide6/translations/qtwebengine_locales/*.tmp
 	rm -rf dist/Sundial/sd-qt.desktop
 	mv dist/Sundial/sd-qt.exe dist/Sundial/sd-main.exe
-	cp -r scripts/dlls/lib* dist/Sundial/PySide6/
-# 	cp -r scripts/rapidocr dist/Sundial/rapidocr
-
-	cp -r sd-ocr-activity/dist/sd-ocr-activity.exe dist/Sundial/
+	cp -r scripts/dlls/lib* dist/Sundial/PySide6/	
+	cp -r sd-ocr-activity/dist/sd-ocr-activity dist/Sundial/sd-ocr-activity
 	 
 # Builds zips and setups
 	bash scripts/package/package-all.sh
