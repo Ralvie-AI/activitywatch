@@ -9,6 +9,9 @@ from pathlib import Path
 
 import sd_core
 import flask_restx
+import rapidocr
+
+rapidocr_path = Path(rapidocr.__file__).parent
 
 current_release = subprocess.run(
     shlex.split("git describe --tags --abbrev=0"),
@@ -30,6 +33,7 @@ sds_location = Path("sd-server")
 sd_main_location = Path("sd-main")
 sda_location = Path("sd-watcher-afk")
 sdw_location = Path("sd-watcher-window")
+sdo_location = Path("sd-ocr-activity")
 
 
 if platform.system() == "Darwin":
@@ -48,15 +52,24 @@ if platform.system() == "Windows":
     pyqt_path = os.path.dirname(PyQt5.__file__)
     extra_pathex.append(pyqt_path + "\\Qt\\bin")
 
+datas_ocr=[
+        (rapidocr_path / "default_models.yaml", "rapidocr"),
+        (rapidocr_path / "models", "rapidocr/models"),
+        (rapidocr_path / "config.yaml", "rapidocr"),
+    ]
+datas_server = [
+    (restx_path / "templates", "flask_restx/templates"),
+    (restx_path / "static", "flask_restx/static"),
+    (sd_core_path / "schemas", "sd_core/schemas"),
+]
+
+datas_server += datas_ocr
 sd_server_a = Analysis(
     ["sd-server/__main__.py"],
     pathex=[],
-    binaries=None,
-    datas=[
-        (restx_path / "templates", "flask_restx/templates"),
-        (restx_path / "static", "flask_restx/static"),
-        (sd_core_path / "schemas", "sd_core/schemas"),
-    ],
+    binaries=[('libgeos_c.1.dylib', '.')],   
+    datas=datas_server,
+    hookspath=["hooks"],
     hiddenimports=[
     'reportlab',
     'reportlab.graphics',
@@ -71,8 +84,13 @@ sd_server_a = Analysis(
     'reportlab.graphics.barcode.usps',
     'reportlab.graphics.barcode.usps4s',
     'reportlab.graphics.barcode.ecc200datamatrix',
+    "rapidocr",
+    "onnxruntime",
+    "torch",
+    "openvino",
+    "shapely",
+    "shapely.geometry",
     ],
-    hookspath=[],
     runtime_hooks=[],
     excludes=[],
     win_no_prefer_redirects=False,
@@ -111,7 +129,7 @@ sd_main_a = Analysis(
     hiddenimports=["PySide6"],
     hookspath=[],
     runtime_hooks=[],
-    excludes=[],
+    excludes=["shapely", "shapely.geos"],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
@@ -146,7 +164,7 @@ sd_watcher_afk_a = Analysis(
     ],
     hookspath=[],
     runtime_hooks=[],
-    excludes=[],
+    excludes=["shapely", "shapely.geos"],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
@@ -169,7 +187,7 @@ sd_watcher_window_a = Analysis(
     hiddenimports=[],
     hookspath=[],
     runtime_hooks=[],
-    excludes=[],
+    excludes=["shapely", "shapely.geos"],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
@@ -183,7 +201,7 @@ sd_pixel_engine_a = Analysis(
     hiddenimports=[],
     hookspath=[],
     runtime_hooks=[],
-    excludes=[],
+    excludes=["shapely", "shapely.geos"],
     cipher=block_cipher,
 )
 
@@ -325,7 +343,6 @@ sd_pixel_engine_coll = COLLECT(
 
 
 
-
 if platform.system() == "Darwin":
     app = BUNDLE(
         sdq_coll,
@@ -333,6 +350,7 @@ if platform.system() == "Darwin":
         sda_coll,
         sds_coll,
         sd_pixel_engine_coll,
+     
         name="Sundial.app",
         icon=icon,
         bundle_identifier="net.ralvie.Sundial",
