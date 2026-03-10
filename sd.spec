@@ -56,6 +56,7 @@ datas_ocr=[
         (rapidocr_path / "default_models.yaml", "rapidocr"),
         (rapidocr_path / "models", "rapidocr/models"),
         (rapidocr_path / "config.yaml", "rapidocr"),
+
     ]
 datas_server = [
     (restx_path / "templates", "flask_restx/templates"),
@@ -101,13 +102,13 @@ dependent_datas = []
 
 if platform.system() == "Windows":
     dependent_datas = [
-        (os.path.join(spec_dir, "libcrypto-1_1-x64.dll"), '.'),
-        (os.path.join(spec_dir, "sqlcipher.dll"), '.'),
+        (os.path.join(Path("."), "scripts/dlls/libcrypto-1_1-x64.dll"), '.'),
+        (os.path.join(Path("."), "scripts/dlls/sqlcipher.dll"), '.'),
     ]
 elif platform.system() == "Darwin":
     dependent_datas = [
-        ("libcrypto.3.dylib", '.'),
-        ("libsqlcipher.0.dylib", '.'),
+        (os.path.join(Path("."), "scripts/dylib/libcrypto.3.dylib"), '.'),
+        (os.path.join(Path("."), "scripts/dylib/libsqlcipher.0.dylib"), '.'),
     ]
 
 datas = [
