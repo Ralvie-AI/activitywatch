@@ -89,6 +89,7 @@ pyinstaller==5.13.2
 pyinstaller-hooks-contrib==2023.10
 PyJWT==2.8.0
 pylint==3.0.2
+PyMonCtl==0.92
 PyMsgBox==2.0.1
 pynput==1.7.6
 pypdf==4.0.0
@@ -115,6 +116,8 @@ pyupgrade==3.8.0
 pywin32==306
 pywin32-ctypes==0.2.2
 pywinauto==0.6.8
+PyWinBox==0.7
+PyWinCtl==0.4.1
 PyYAML==6.0.1
 qrcode==7.4.2
 RapidFuzz==3.13.0
