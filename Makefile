@@ -11,7 +11,7 @@
 
 SHELL := /usr/bin/env bash
 
-SUBMODULES := sd-core sd-client sd-qt sd-server sd-watcher-afk sd-watcher-window sd-pixel-engine
+SUBMODULES := sd-ocr-activity sd-pixel-engine sd-core sd-client sd-server sd-qt sd-watcher-afk sd-watcher-window
 
 # Include extras if sd_EXTRAS is true
 ifeq ($(sd_EXTRAS),true)
@@ -44,7 +44,7 @@ build:
 	fi
 #	needed due to https://github.com/pypa/setuptools/issues/1963
 #	would ordinarily be specified in pyproject.toml, but is not respected due to https://github.com/pypa/setuptools/issues/1963
-	pip install 'setuptools>49.1.1'
+# 	pip install 'setuptools>49.1.1'
 	for module in $(SUBMODULES); do \
 		echo "Building $$module"; \
 		make --directory=$$module build SKIP_WEBUI=$(SKIP_WEBUI); \
@@ -145,11 +145,21 @@ dist/notarize:
 	
 package:
 	rm -rf dist
-	mkdir -p dist/Sundial
+	find . -type d -name "build" -prune -exec rm -rfv {} \;
+	find . -type d -name "dist" -prune -exec rm -rfv {} \;
+	mkdir -p dist/Sundial	
+	
 	for dir in $(PACKAGEABLES); do \
+		make --directory=$$dir build; \
 		make --directory=$$dir package; \
+		if [ "$$dir" = "sd-ocr-activity" ]; then \
+			python sd-ocr-activity/scripts/test.py; \
+		elif [ "$$dir" = "sd-pixel-engine" ]; then \
+			make --directory=sd-core build; \
+			make --directory=sd-client build; \
+		fi; \
 		cp -r $$dir/dist/$$dir/* dist/Sundial; \
-	done
+	done	
 # Move sd-qt to the root of the dist folder
 # 	mv dist/Sundial/sd-qt sd-qt-tmp
 # 	mv sd-qt-tmp/* dist/Sundial
@@ -197,14 +207,14 @@ package:
 	
 	rm -rf dist/Sundial/PySide6/qml
 	rm -rf dist/Sundial/pytz
-	rm -rf dist/Sundial/jsonschema
+# 	rm -rf dist/Sundial/jsonschema
 	rm -rf dist/Sundial/jsonschema-4.19.1.dist-info
 	rm -rf dist/Sundial/keyring-25.0.0.dist-info
 	rm -rf dist/Sundial/menuarkupsafe
-	rm -rf dist/Sundial/werkzeug-2.3.7.dist-info
+# 	rm -rf dist/Sundial/werkzeug-2.3.7.dist-info
 	rm -rf dist/Sundial/importlib_metadata-6.8.0.dist-info
 	rm -rf dist/Sundial/cryptography-41.0.5.dist-info
-	rm -rf dist/Sundial/flask-2.3.3.dist-info
+# 	rm -rf dist/Sundial/flask-2.3.3.dist-info
 	rm -rf dist/Sundial/attrs-23.1.0.dist-info
 	rm -rf dist/Sundial/PySide6/translations/*.qm
 	cp dist/Sundial/PySide6/translations/qtwebengine_locales/en-US.pak dist/Sundial/PySide6/translations/qtwebengine_locales/en-US.tmp
@@ -213,8 +223,11 @@ package:
 	rm -rf dist/Sundial/PySide6/translations/qtwebengine_locales/*.tmp
 	rm -rf dist/Sundial/sd-qt.desktop
 	mv dist/Sundial/sd-qt.exe dist/Sundial/sd-main.exe
-	cp -r scripts/dlls/lib* dist/Sundial/PySide6/	
-	cp -r sd-ocr-activity/dist/sd-ocr-activity dist/Sundial/sd-ocr-activity
+# 	cp -r scripts/dlls/lib* dist/Sundial/PySide6/	
+# 	cp -r sd-ocr-activity/dist/sd-ocr-activity dist/Sundial/sd-ocr-activity
+# 	rm -rf dist/Sundial/_internal
+	
+
 	 
 # Builds zips and setups
 	bash scripts/package/package-all.sh
