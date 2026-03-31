@@ -11,7 +11,7 @@
 
 SHELL := /usr/bin/env bash
 
-SUBMODULES := sd-ocr-activity sd-pixel-engine sd-core sd-client sd-server sd-qt sd-watcher-afk sd-watcher-window
+SUBMODULES := sd-ocr-activity sd-pixel-engine sd-core sd-client sd-qt sd-server  sd-watcher-afk sd-watcher-window
 
 # Include extras if sd_EXTRAS is true
 ifeq ($(sd_EXTRAS),true)
@@ -145,8 +145,8 @@ dist/notarize:
 	
 package:
 	rm -rf dist
-	find . -type d -name "build" -prune -exec rm -rfv {} \;
-	find . -type d -name "dist" -prune -exec rm -rfv {} \;
+	find . -type d -name "build" -prune -exec rm -rf {} \;
+	find . -type d -name "dist" -prune -exec rm -rf {} \;
 	mkdir -p dist/Sundial	
 	
 	for dir in $(PACKAGEABLES); do \
@@ -154,7 +154,6 @@ package:
 		make --directory=$$dir package; \
 		if [ "$$dir" = "sd-ocr-activity" ]; then \
 			python sd-ocr-activity/scripts/test.py; \
-		elif [ "$$dir" = "sd-pixel-engine" ]; then \
 			make --directory=sd-core build; \
 			make --directory=sd-client build; \
 		fi; \
