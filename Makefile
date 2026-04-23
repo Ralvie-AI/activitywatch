@@ -9,6 +9,11 @@
 # Instructions on how to do this can be found in the guide linked above.
 .PHONY: build install test clean clean_all
 
+# Generate version.py
+github_version:
+	@echo Generating version.py...
+	@echo GIT_COMMIT=\"$(shell git rev-parse --short HEAD)\" > sd-server/sd_server/version.py
+
 SHELL := /usr/bin/env bash
 
 SUBMODULES := sd-core sd-client sd-qt sd-server sd-watcher-afk sd-watcher-window sd-pixel-engine
@@ -36,7 +41,7 @@ TYPECHECKABLES := $(foreach dir,$(SUBMODULES),$(call has_target,$(dir),typecheck
 # What it does:
 #  - Installs all the Python modules
 #  - Builds the web UI and bundles it with sd-server
-build:
+build: github_version
 	if [ -e "sd-core/.git" ]; then \
 		echo "Submodules seem to already be initialized, continuing..."; \
 	else \
