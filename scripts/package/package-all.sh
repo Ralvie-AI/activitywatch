@@ -36,7 +36,7 @@ function get_arch() {
 }
 
 platform=$(get_platform)
-version="1.3.1"
+version=$RELEASE_VERSION
 arch=$(get_arch)
 echo "Platform: $platform, arch: $arch, version: $version"
 

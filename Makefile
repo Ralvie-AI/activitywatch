@@ -7,12 +7,20 @@
 #
 # We recommend creating and activating a Python virtualenv before building.
 # Instructions on how to do this can be found in the guide linked above.
+export RELEASE_VERSION=1.3.1
+
 .PHONY: build install test clean clean_all
 
 # Generate version.py
 github_version:
+
+	@echo "Hello $(RELEASE_VERSION)"
+
 	@echo Generating version.py...
 	@echo GIT_COMMIT=\"$(shell git rev-parse --short HEAD)\" > sd-server/sd_server/version.py
+	
+	@echo RELEASE_VERSION=\"$$RELEASE_VERSION\" > sd-qt/sd_qt/version.py
+	
 
 SHELL := /usr/bin/env bash
 
@@ -190,6 +198,9 @@ package:
 # Builds zips and setups
 	bash scripts/package/package-all.sh
 
+
+	@echo "Release version: $(RELEASE_VERSION)"
+
 sign:
 	bash scripts/package/package-signed.sh
 
@@ -205,3 +216,5 @@ clean_all: clean
 clean-auto:
 	rm -rIv **/sd-android/mobile/build
 	rm -rIfv **/node_modules
+
+
