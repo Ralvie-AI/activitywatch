@@ -14,7 +14,7 @@ export RELEASE_VERSION=1.3.2
 # Generate version.py
 github_version:
 
-	@echo "Hello $(RELEASE_VERSION)"
+	@echo "RELEASE VERSION $(RELEASE_VERSION)"
 
 	@echo Generating version.py...
 	@echo GIT_COMMIT=\"$(shell git rev-parse --short HEAD)\" > sd-server/sd_server/version.py
