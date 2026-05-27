@@ -19,7 +19,7 @@ github_version:
 	@echo Generating version.py...
 	@echo GIT_COMMIT=\"$(shell git rev-parse --short HEAD)\" > sd-server/sd_server/version.py
 	
-	@echo RELEASE_VERSION=\"$$RELEASE_VERSION\" > sd-qt/sd_qt/version.py
+	@echo RELEASE_VERSION=\"$$RELEASE_VERSION\" > sd-core/sd_core/version.py
 	
 
 SHELL := /usr/bin/env bash
