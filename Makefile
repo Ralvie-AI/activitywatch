@@ -20,7 +20,8 @@ github_version:
 	@echo GIT_COMMIT=\"$(shell git rev-parse --short HEAD)\" > sd-server/sd_server/version.py
 	
 	@echo RELEASE_VERSION=\"$$RELEASE_VERSION\" > sd-core/sd_core/version.py
-	
+
+	python -c "import secrets; open('sd-core/sd_core/salt_file.py', 'w').write(f'MY_SALT = \"{secrets.token_hex(32)}\"\n')"	
 
 SHELL := /usr/bin/env bash
 
