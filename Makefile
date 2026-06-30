@@ -7,7 +7,7 @@
 #
 # We recommend creating and activating a Python virtualenv before building.
 # Instructions on how to do this can be found in the guide linked above.
-export RELEASE_VERSION=1.3.3
+export RELEASE_VERSION=1.3.4
 
 .PHONY: build install test clean clean_all
 
