@@ -189,7 +189,6 @@ package: github_version
 	rm -rf dist/Sundial/pytz
 # 	rm -rf dist/Sundial/jsonschema
 	rm -rf dist/Sundial/jsonschema-4.19.1.dist-info
-	rm -rf dist/Sundial/keyring-25.0.0.dist-info
 	rm -rf dist/Sundial/menuarkupsafe
 # 	rm -rf dist/Sundial/werkzeug-2.3.7.dist-info
 	rm -rf dist/Sundial/importlib_metadata-6.8.0.dist-info
@@ -204,8 +203,6 @@ package: github_version
 	rm -rf dist/Sundial/PySide6/translations/qtwebengine_locales/*.tmp
 	rm -rf dist/Sundial/sd-qt.desktop
 	mv dist/Sundial/sd-qt.exe dist/Sundial/sd-main.exe
-
-
 
 	 
 # Builds zips and setups
