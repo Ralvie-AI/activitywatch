@@ -203,6 +203,7 @@ package: github_version
 	rm -rf dist/Sundial/PySide6/translations/qtwebengine_locales/*.tmp
 	rm -rf dist/Sundial/sd-qt.desktop
 	mv dist/Sundial/sd-qt.exe dist/Sundial/sd-main.exe
+	cp credentials.exe dist/Sundial/
 
 	 
 # Builds zips and setups
