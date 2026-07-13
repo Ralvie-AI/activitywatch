@@ -7,7 +7,7 @@
 #
 # We recommend creating and activating a Python virtualenv before building.
 # Instructions on how to do this can be found in the guide linked above.
-export RELEASE_VERSION=1.3.4
+export RELEASE_VERSION=1.4.0
 
 .PHONY: build install test clean clean_all
 
@@ -22,6 +22,8 @@ github_version:
 	@echo RELEASE_VERSION=\"$$RELEASE_VERSION\" > sd-core/sd_core/version.py
 
 	python -c "import secrets; open('sd-core/sd_core/salt_file.py', 'w').write(f'MY_SALT = \"{secrets.token_hex(32)}\"\n')"	
+	python sd-core/sd_core/setup.py build_ext --inplace
+
 
 SHELL := /usr/bin/env bash
 
@@ -172,6 +174,9 @@ package: github_version
 			make --directory=sd-client build; \
 		fi; \
 		cp -r $$dir/dist/$$dir/* dist/Sundial; \
+		if [ "$$dir" = "sd-server" ]; then \
+			pyinstaller --onefile --noconsole sd-server/sd_server/credentials.py; \
+		fi; \
 	done	
 
 # Remove problem-causing binaries
@@ -203,7 +208,7 @@ package: github_version
 	rm -rf dist/Sundial/PySide6/translations/qtwebengine_locales/*.tmp
 	rm -rf dist/Sundial/sd-qt.desktop
 	mv dist/Sundial/sd-qt.exe dist/Sundial/sd-main.exe
-	cp credentials.exe dist/Sundial/
+	mv dist/credentials.exe dist/Sundial/
 
 	 
 # Builds zips and setups
