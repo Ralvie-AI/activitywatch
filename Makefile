@@ -23,6 +23,12 @@ github_version:
 
 	python -c "import secrets; open('sd-core/sd_core/salt_file.py', 'w').write(f'MY_SALT = \"{secrets.token_hex(32)}\"\n')"	
 	python sd-core/sd_core/setup.py build_ext --inplace
+	python sd-server/sd_server/setup.py build_ext --inplace
+	python sd-pixel-engine/sd_pixel_engine/setup.py build_ext --inplace
+	python sd-watcher-afk/sd_watcher_afk/setup.py build_ext --inplace
+	python sd-ocr-activity/sd_ocr_activity/setup.py build_ext --inplace
+
+	rm -rfv sd-server/sd_server/credentials.py
 
 
 SHELL := /usr/bin/env bash
@@ -174,9 +180,9 @@ package: github_version
 			make --directory=sd-client build; \
 		fi; \
 		cp -r $$dir/dist/$$dir/* dist/Sundial; \
-		if [ "$$dir" = "sd-server" ]; then \
-			pyinstaller --onefile --noconsole sd-server/sd_server/credentials.py; \
-		fi; \
+# 		if [ "$$dir" = "sd-server" ]; then \
+# 			pyinstaller --onefile --additional-hooks-dir=hooks --noconsole sd-server/sd_server/credential.py; \
+# 		fi; \
 	done	
 
 # Remove problem-causing binaries
@@ -189,7 +195,16 @@ package: github_version
 	rm -f dist/Sundial/libfreetype.so.6
 # Remove unnecessary files
 
-
+	pyinstaller \
+	--onefile \
+	--noconsole \
+	--hidden-import=json \
+	--hidden-import=json.decoder \
+	--hidden-import=json.encoder \
+	--hidden-import=requests \
+	sd-server/sd_server/credential.py
+	
+	
 	rm -rf dist/Sundial/PySide6/qml
 	rm -rf dist/Sundial/pytz
 # 	rm -rf dist/Sundial/jsonschema
@@ -208,14 +223,18 @@ package: github_version
 	rm -rf dist/Sundial/PySide6/translations/qtwebengine_locales/*.tmp
 	rm -rf dist/Sundial/sd-qt.desktop
 	mv dist/Sundial/sd-qt.exe dist/Sundial/sd-main.exe
-	mv dist/credentials.exe dist/Sundial/
+	mv dist/credential.exe dist/Sundial/
 
+	
 	 
 # Builds zips and setups
 	bash scripts/package/package-all.sh
 
 
 	@echo "Release version: $(RELEASE_VERSION)"
+	@cd "$(shell pwd)"
+	@cd sd-server; \
+	git checkout -- sd_server/credentials.py; \
 
 sign:
 	bash scripts/package/package-signed.sh
