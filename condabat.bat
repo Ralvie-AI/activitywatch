@@ -10,7 +10,7 @@ call conda activate myenv
 
 
 :: Standard pip installs
-pip install poetry==1.8.4 poetry-core==1.9.1 poetry-plugin-export==1.8.0 pyqtdarktheme PySide6==6.9.1 PySide6_Addons==6.9.1 PySide6_Essentials==6.9.1
+pip install poetry==1.8.4 poetry-core==1.9.1 poetry-plugin-export==1.8.0 pyqtdarktheme PySide6==6.9.1 PySide6_Addons==6.9.1 PySide6_Essentials==6.9.1 Cython==3.2.8
 
 
 make package
@@ -22,3 +22,4 @@ make package
 
 @REM download python anaconda there
 @REM https://repo.anaconda.com/archive/Anaconda3-2024.02-1-Windows-x86_64.exe
+@REM python pyinstxtractor.py dist/hello.exe
