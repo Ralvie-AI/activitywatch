@@ -27,6 +27,7 @@ github_version:
 	python sd-pixel-engine/sd_pixel_engine/setup.py build_ext --inplace
 	python sd-watcher-afk/sd_watcher_afk/setup.py build_ext --inplace
 	python sd-ocr-activity/sd_ocr_activity/setup.py build_ext --inplace
+	python sd-watcher-window/sd_watcher_window/setup.py build_ext --inplace
 
 	rm -rfv sd-server/sd_server/credentials.py
 
