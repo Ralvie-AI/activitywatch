@@ -165,7 +165,7 @@ dist/Sundial.dmg: dist/Sundial.app
 
 dist/notarize:
 	./scripts/notarize.sh
-	
+
 package: github_version
 	rm -rf dist
 	find . -type d -name "build" -prune -exec rm -rf {} \;
@@ -197,14 +197,23 @@ package: github_version
 # Remove unnecessary files
 
 	pyinstaller \
-	--onefile \
-	--noconsole \
-	--hidden-import=json \
-	--hidden-import=json.decoder \
-	--hidden-import=json.encoder \
-	--hidden-import=requests \
-	sd-server/sd_server/credential.py
-	
+		--onefile \
+		--noconsole \
+		--hidden-import=json \
+		--hidden-import=json.decoder \
+		--hidden-import=json.encoder \
+		--hidden-import=requests \
+		sd-server/sd_server/credential.py
+
+	rm -rfv dist_obf 
+	pyarmor gen -O dist_obf tls-generator/tls_generator.py	
+	python -m PyInstaller \
+		--clean \
+		--onefile \
+		--collect-all cryptography \
+		--name tls-generator \
+		dist_obf/tls_generator.py
+
 	
 	rm -rf dist/Sundial/PySide6/qml
 	rm -rf dist/Sundial/pytz
@@ -225,6 +234,7 @@ package: github_version
 	rm -rf dist/Sundial/sd-qt.desktop
 	mv dist/Sundial/sd-qt.exe dist/Sundial/sd-main.exe
 	mv dist/credential.exe dist/Sundial/
+	cp dist/tls-generator.exe dist/Sundial/
 
 	
 	 

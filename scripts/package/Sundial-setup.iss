@@ -57,6 +57,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "{#DistDir}\Sundial\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#DistDir}\Sundial\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#DistDir}\Sundial\tls-generator.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
  
 [UninstallDelete]
@@ -72,7 +73,8 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
  
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
- 
+Filename: "{tmp}\tls-generator.exe"; Flags: runhidden waituntilterminated
+
 ; Removes the previously installed version before installing the new one
 ; NOTE: Doesn't work? And also discouraged by the docs
  
