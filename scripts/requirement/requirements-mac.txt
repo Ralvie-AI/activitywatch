@@ -1,0 +1,47 @@
+# Poetry & Build Tools
+poetry==1.8.4
+poetry-core==1.9.1
+poetry-plugin-export==1.8.0
+
+# UI & Themes
+PySide6==6.9.2
+PySide6_Addons==6.9.2
+PySide6_Essentials==6.9.2
+shiboken6==6.9.2
+pyqtdarktheme
+
+# Web & API Framework
+Flask==2.3.3
+Flask-Cors==4.0.0
+flask-restx==1.2.0
+Werkzeug==2.3.7
+
+# Database & Encryption
+peewee==3.17.0
+pysqlcipher3==1.2.0
+sqlcipher3==0.5.2
+
+# OCR, AI & Math
+rapidocr==3.6.0
+onnxruntime==1.19.2
+opencv-python-headless==4.9.0.80
+numpy==1.26.4
+Shapely==1.8.5.post1
+
+# System, Automation & Inputs
+mss==10.1.0
+pynput==1.7.6
+psutil==6.0.0
+
+# Documents, Images & Barcodes
+reportlab==4.0.9
+qrcode==7.4.2
+pillow==10.2.0
+
+# Utilities, Network & Timezone
+requests==2.31.0
+python-dateutil==2.9.0.post0
+pytz==2023.3.post1
+tzlocal==5.2
+charset-normalizer==3.3.1
+coloredlogs==15.0.1
