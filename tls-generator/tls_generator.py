@@ -73,11 +73,6 @@ def generate():
     with open(CERT_FILE, "wb") as f:
         f.write(cert.public_bytes(serialization.Encoding.PEM))
 
-    print("Certificate generated.")
-    print(CERT_FILE)
-    print(KEY_FILE)
-
-
 if __name__ == "__main__":
     try:
         generate()
