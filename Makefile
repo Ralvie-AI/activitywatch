@@ -217,7 +217,6 @@ package: github_version
 
 	
 	rm -rf dist/Sundial/PySide6/qml
-	rm -rf dist/Sundial/pytz
 # 	rm -rf dist/Sundial/jsonschema
 	rm -rf dist/Sundial/jsonschema-4.19.1.dist-info
 	rm -rf dist/Sundial/menuarkupsafe
