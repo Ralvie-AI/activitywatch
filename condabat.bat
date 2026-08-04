@@ -10,7 +10,7 @@ call conda activate myenv
 
 
 :: Standard pip installs
-pip install poetry==1.8.4 poetry-core==1.9.1 poetry-plugin-export==1.8.0 pyqtdarktheme PySide6==6.9.1 PySide6_Addons==6.9.1 PySide6_Essentials==6.9.1 Cython==3.2.8 pyarmor==9.2.5
+pip install -r scripts/requirements/requirements.txt
 
 
 make package
