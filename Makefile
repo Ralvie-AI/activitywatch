@@ -30,8 +30,6 @@ github_version:
 	python sd-watcher-window/sd_watcher_window/setup.py build_ext --inplace
 	python sd-qt/sd_qt/setup.py build_ext --inplace
 
-	rm -rfv sd-server/sd_server/credentials.py
-
 
 SHELL := /usr/bin/env bash
 
@@ -196,7 +194,7 @@ package: github_version
 	rm -f dist/Sundial/libfontconfig.so.1
 	rm -f dist/Sundial/libfreetype.so.6
 # Remove unnecessary files
-
+	
 	pyinstaller \
 		--onefile \
 		--noconsole \
@@ -214,7 +212,7 @@ package: github_version
 		--collect-all cryptography \
 		--name tls-generator \
 		dist_obf/tls_generator.py
-
+	rm -rfv dist_obf 
 	
 	rm -rf dist/Sundial/PySide6/qml
 # 	rm -rf dist/Sundial/jsonschema
@@ -234,18 +232,15 @@ package: github_version
 	rm -rf dist/Sundial/sd-qt.desktop
 	mv dist/Sundial/sd-qt.exe dist/Sundial/sd-main.exe
 	mv dist/credential.exe dist/Sundial/
-	cp dist/tls-generator.exe dist/Sundial/
+	mv dist/tls-generator.exe dist/Sundial/
 
 	
 	 
 # Builds zips and setups
 	bash scripts/package/package-all.sh
 
-
 	@echo "Release version: $(RELEASE_VERSION)"
-	@cd "$(shell pwd)"
-	@cd sd-server; \
-	git checkout -- sd_server/credentials.py; \
+
 
 sign:
 	bash scripts/package/package-signed.sh
