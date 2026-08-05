@@ -26,10 +26,7 @@ def generate():
     LOCALAPPDATA.mkdir(parents=True, exist_ok=True)
 
     if CERT_FILE.exists() and KEY_FILE.exists():
-        print("TLS certificate already exists.")
         return
-
-    print("Generating TLS certificate...")
 
     key = rsa.generate_private_key(
         public_exponent=65537,
