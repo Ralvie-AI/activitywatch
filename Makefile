@@ -209,6 +209,8 @@ package: github_version
 	python -m PyInstaller \
 		--clean \
 		--onefile \
+		--hidden-import=ctypes \
+		--hidden-import=ctypes.wintypes \
 		--collect-all cryptography \
 		--name tls-generator \
 		dist_obf/tls_generator.py
