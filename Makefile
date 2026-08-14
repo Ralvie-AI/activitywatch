@@ -205,7 +205,7 @@ package: github_version
 		sd-server/sd_server/credential.py
 
 	rm -rfv dist_obf 
-	pyarmor gen -O dist_obf tls-generator/tls_generator.py	
+	pyarmor gen -O dist_obf tls-generator/tls_generator.py
 	python -m PyInstaller \
 		--clean \
 		--onefile \
@@ -214,7 +214,14 @@ package: github_version
 		--collect-all cryptography \
 		--name tls-generator \
 		dist_obf/tls_generator.py
-	rm -rfv dist_obf 
+	rm -rfv dist_obf
+
+	pyarmor gen -O dist_obf log-cleaner/cleanup_log.py
+	python -m PyInstaller \
+		--clean \
+		--onefile \
+		--name log-cleaner \
+		dist_obf/cleanup_log.py
 	
 	rm -rf dist/Sundial/PySide6/qml
 # 	rm -rf dist/Sundial/jsonschema
@@ -235,6 +242,7 @@ package: github_version
 	mv dist/Sundial/sd-qt.exe dist/Sundial/sd-main.exe
 	mv dist/credential.exe dist/Sundial/
 	mv dist/tls-generator.exe dist/Sundial/
+	mv dist/log-cleaner.exe dist/Sundial/
 
 	
 	 
