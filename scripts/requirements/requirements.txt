@@ -8,3 +8,4 @@ PySide6_Essentials==6.9.1
 Cython==3.2.8 
 pyarmor==9.2.5 
 charset-normalizer==3.4.7
+nvidia-ml-py
