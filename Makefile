@@ -21,7 +21,8 @@ github_version:
 	
 	@echo RELEASE_VERSION=\"$$RELEASE_VERSION\" > sd-core/sd_core/version.py
 
-	python -c "import secrets; open('sd-core/sd_core/salt_file.py', 'w').write(f'MY_SALT = \"{secrets.token_hex(32)}\"\n')"	
+	python -c "import secrets; open('sd-core/sd_core/salt_file.pyx', 'w').write(f'# cython: language_level=3\n\n# Native C variable (invisible to inspect/dir)\ncdef const char* _RAW_SALT = \"{secrets.token_hex(32)}\"\n\n# Python-callable wrapper function\ncpdef str get_salt():\n    return _RAW_SALT.decode(\"utf-8\")\n')"
+# 	python -c "import secrets; open('sd-core/sd_core/salt_file.py', 'w').write(f'MY_SALT = \"{secrets.token_hex(32)}\"\n')"	
 	python sd-core/sd_core/setup.py build_ext --inplace
 	python sd-server/sd_server/setup.py build_ext --inplace
 	python sd-pixel-engine/sd_pixel_engine/setup.py build_ext --inplace
