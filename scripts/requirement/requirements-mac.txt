@@ -15,6 +15,7 @@ Flask==2.3.3
 Flask-Cors==4.0.0
 flask-restx==1.2.0
 Werkzeug==2.3.7
+flask-jwt-extended==4.7.4
 
 # Database & Encryption
 peewee==3.17.0
