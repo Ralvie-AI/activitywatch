@@ -7,7 +7,7 @@
 #
 # We recommend creating and activating a Python virtualenv before building.
 # Instructions on how to do this can be found in the guide linked above.
-export RELEASE_VERSION=1.3.4
+export RELEASE_VERSION=1.3.5
 
 .PHONY: build install test clean clean_all
 
@@ -25,7 +25,7 @@ github_version:
 
 SHELL := /usr/bin/env bash
 
-SUBMODULES := sd-core sd-client sd-qt sd-server sd-watcher-afk sd-watcher-window sd-pixel-engine
+SUBMODULES := sd-ocr-activity sd-core sd-client sd-qt sd-server sd-watcher-afk sd-watcher-window sd-pixel-engine
 
 # Include extras if sd_EXTRAS is true
 ifeq ($(sd_EXTRAS),true)
@@ -58,7 +58,7 @@ build: github_version
 	fi
 #	needed due to https://github.com/pypa/setuptools/issues/1963
 #	would ordinarily be specified in pyproject.toml, but is not respected due to https://github.com/pypa/setuptools/issues/1963
-	pip install 'setuptools>49.1.1'
+# 	pip install 'setuptools>49.1.1'
 	for module in $(SUBMODULES); do \
 		echo "Building $$module"; \
 		make --directory=$$module build SKIP_WEBUI=$(SKIP_WEBUI); \
@@ -165,6 +165,12 @@ package:
 		cp -r $$dir/dist/$$dir/* dist/Sundial; \
 	done
 
+	python -m PyInstaller \
+		--clean \
+		--onefile \
+		--name sd-log-cleaner \
+		log-cleaner/cleanup_log.py
+
 # Remove problem-causing binaries
 	rm -f dist/Sundial/libdrm.so.2       # see: https://github.com/Sundial/Sundial/issues/161
 	rm -f dist/Sundial/libharfbuzz.so.0  # see: https://github.com/Sundial/Sundial/issues/660#issuecomment-959889230
@@ -194,7 +200,7 @@ package:
 	rm -rf dist/Sundial/sd-qt.desktop
 	mv dist/Sundial/sd-qt.exe dist/Sundial/sd-main.exe
 	cp -r scripts/dlls/lib* dist/Sundial/PySide6/	
-	cp -r sd-ocr-activity/dist/sd-ocr-activity dist/Sundial/sd-ocr-activity
+	mv dist/sd-log-cleaner.exe dist/Sundial/
 	 
 # Builds zips and setups
 	bash scripts/package/package-all.sh
