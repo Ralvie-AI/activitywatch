@@ -34,6 +34,7 @@ sd_main_location = Path("sd-main")
 sda_location = Path("sd-watcher-afk")
 sdw_location = Path("sd-watcher-window")
 sdo_location = Path("sd-ocr-activity")
+tls_gen_location = Path("tls-generator")
 
 
 if platform.system() == "Darwin":
@@ -206,6 +207,20 @@ sd_pixel_engine_a = Analysis(
     cipher=block_cipher,
 )
 
+tls_generator_a = Analysis(
+    [tls_gen_location/"tls_generator/tls_generator.py"],
+    pathex=[],
+    binaries=None,
+    datas=None,
+    hiddenimports=[],
+    hookspath=[],
+    runtime_hooks=[],
+    excludes=["shapely", "shapely.geos"],
+    win_no_prefer_redirects=False,
+    win_private_assemblies=False,
+    cipher=block_cipher,
+)
+
 
 # https://pythonhosted.org/PyInstaller/spec-files.html#multipackage-bundles
 # MERGE takes a bit weird arguments, it wants tuples which consists of
@@ -342,7 +357,34 @@ sd_pixel_engine_coll = COLLECT(
     name="sd-pixel-engine",
 )
 
+tls_generator_pyz = PYZ(
+    tls_generator_a.pure,
+    tls_generator_a.zipped_data,
+    cipher=block_cipher
+)
 
+tls_generator_exe = EXE(
+    tls_generator_pyz,
+    tls_generator_a.scripts,
+    exclude_binaries=True,
+    name="tls-generator",
+    debug=False,
+    strip=False,
+    upx=True,
+    console=True,
+    entitlements_file=entitlements_file,
+    codesign_identity=codesign_identity,
+)
+
+tls_generator_coll = COLLECT(
+    tls_generator_exe,
+    tls_generator_a.binaries,
+    tls_generator_a.zipfiles,
+    tls_generator_a.datas,
+    strip=False,
+    upx=True,
+    name="tls-generator",
+)
 
 if platform.system() == "Darwin":
     app = BUNDLE(
@@ -351,6 +393,7 @@ if platform.system() == "Darwin":
         sda_coll,
         sds_coll,
         sd_pixel_engine_coll,
+        tls_generator_coll,
      
         name="Sundial.app",
         icon=icon,
