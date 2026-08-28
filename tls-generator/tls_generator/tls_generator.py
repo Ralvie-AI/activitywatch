@@ -8,7 +8,7 @@ import keyring
 import platform
 import subprocess
 import os
-
+import time
 from cryptography import x509
 from cryptography.x509.oid import NameOID, ExtendedKeyUsageOID
 from cryptography.hazmat.primitives import hashes, serialization
@@ -21,13 +21,12 @@ import logging
 from sd_core.cache import get_password, add_password, keychain_item_exists, delete_password
 
 logger = logging.getLogger(__name__)
-setup_logging("tls_generator", log_file=True)
 
 def setup_and_save_keychain():
     """
     Create a new Keychain Access and save in Keychain Access
     """
-    logger.info('[tls] Setting a new keychain')
+    logger.info('[tls-exe] Setting a new keychain')
     # 1. create key AES-256
     raw_key = AESGCM.generate_key(bit_length=256)
     
@@ -65,16 +64,22 @@ def decrypt(data: bytes, key: bytes) -> bytes:
 
 def generate():
 
-    logger.info('[tls] Generate...')
+    setup_logging("tls-generator", log_file=True)
+    
+    logger.info('[tls-exe] Generate...')
 
     TLS_DIR.mkdir(parents=True, exist_ok=True)
 
-    #if (PASSWORD.exists()):
+    #del files for verify
+    CERT_FILE.unlink(missing_ok=True)
+    CERT_FILE_SWIFT.unlink(missing_ok=True)
+    KEY_FILE.unlink(missing_ok=True)
+
     if keychain_item_exists(TLS_SERVICE_NAME):
-        logger.info('[tls] already have PASSWORD - Delete it')
+        logger.info('[tls-exe] already have PASSWORD - Delete it')
         delete_password(TLS_SERVICE_NAME)
     else:
-        logger.info('[tls] Must create new')
+        logger.info('[tls-exe] Must create new')
 
     setup_and_save_keychain()
 
@@ -166,7 +171,7 @@ def generate():
         bytes.fromhex(get_password(TLS_SERVICE_NAME))
     )
 
-    logger.info('[tls] Writing File...')
+    logger.info('[tls-exe] Writing File...')
     
     # Write certificate
     with open(CERT_FILE, "wb") as f:
@@ -175,6 +180,8 @@ def generate():
                 serialization.Encoding.PEM
             )
         )
+
+    # Write certificate for .swift use
     with open(CERT_FILE_SWIFT, "wb") as f:
         f.write(
             cert.public_bytes(
@@ -182,14 +189,16 @@ def generate():
             )
         )
 
-    # Write DPAPI-protected private key
+    # Write private key
     with open(KEY_FILE, "wb") as f:
         f.write(protected_key)
 
-    if CERT_FILE.exists() and KEY_FILE.exists():
-        logger.info('[tls] Writing DONE')
-    else:
-        logger.info('[tls] Writing Failed')
+    #verify that have complete files
+    while not all([CERT_FILE.exists(), KEY_FILE.exists(), CERT_FILE_SWIFT.exists()]):
+        logger.info('Incomplete files.')
+        logger.info('Creating The new one.')
+        generate()
+        time.sleep(1)
 
     return private_key_pem
 
