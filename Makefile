@@ -25,7 +25,7 @@ github_version:
 
 SHELL := /usr/bin/env bash
 
-SUBMODULES := sd-ocr-activity sd-core sd-client sd-qt sd-server sd-watcher-afk sd-watcher-window sd-pixel-engine
+SUBMODULES := sd-ocr-activity sd-pixel-engine sd-core sd-client sd-server sd-watcher-afk sd-watcher-window sd-qt
 
 # Include extras if sd_EXTRAS is true
 ifeq ($(sd_EXTRAS),true)
@@ -157,13 +157,30 @@ dist/Sundial.dmg: dist/Sundial.app
 dist/notarize:
 	./scripts/notarize.sh
 	
-package:
+package: github_version
 	rm -rf dist
-	mkdir -p dist/Sundial
+	find . -type d -name "build" -prune -exec rm -rf {} \;
+	find . -type d -name "dist" -prune -exec rm -rf {} \;
+	mkdir -p dist/Sundial	
+	
 	for dir in $(PACKAGEABLES); do \
-		make --directory=$$dir package; \
+		if [ "$$dir" == "sd-ocr-activity" ]; then \
+			make --directory=$$dir build; \
+			make --directory=$$dir package; \
+			python sd-ocr-activity/scripts/test.py; \
+		elif [ "$$dir" == "sd-pixel-engine" ]; then \
+			make --directory=$$dir build; \
+			make --directory=$$dir package; \
+		elif [ "$$dir" == "sd-core" ]; then \
+			make --directory=$$dir build; \
+		elif [ "$$dir" == "sd-client" ]; then \
+			make --directory=$$dir build; \
+		else \
+			make --directory=$$dir build; \
+			make --directory=$$dir package; \
+		fi; \
 		cp -r $$dir/dist/$$dir/* dist/Sundial; \
-	done
+	done	
 
 	python -m PyInstaller \
 		--clean \
