@@ -163,7 +163,7 @@ package: github_version
 	find . -type d -name "dist" -prune -exec rm -rf {} \;
 	mkdir -p dist/Sundial	
 	
-	for dir in $(PACKAGEABLES); do \
+	for dir in $(SUBMODULES); do \
 		if [ "$$dir" == "sd-ocr-activity" ]; then \
 			make --directory=$$dir build; \
 			make --directory=$$dir package; \
