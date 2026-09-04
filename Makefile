@@ -25,7 +25,7 @@ github_version:
 
 SHELL := /usr/bin/env bash
 
-SUBMODULES := sd-ocr-activity sd-pixel-engine sd-core sd-client sd-server sd-watcher-afk sd-watcher-window sd-qt
+SUBMODULES := sd-ocr-activity sd-pixel-engine sd-pixel-engine-event sd-core sd-client sd-server sd-watcher-afk sd-watcher-window sd-qt
 
 # Include extras if sd_EXTRAS is true
 ifeq ($(sd_EXTRAS),true)
