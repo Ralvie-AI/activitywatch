@@ -28,3 +28,6 @@
 [submodule "sd-ocr-activity"]
 	path = sd-ocr-activity
 	url = https://github.com/Ralvie-AI/sd-ocr-activity.git
+[submodule "sd-pixel-engine-event"]
+	path = sd-pixel-engine-event
+	url = https://github.com/Ralvie-AI/sd-pixel-engine-event.git
