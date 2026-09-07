@@ -25,3 +25,6 @@
 [submodule "sd-pixel-engine"]
 	path = sd-pixel-engine
 	url = https://github.com/Ralvie-AI/sd-pixel-engine.git
+[submodule "sd-pixel-engine-event"]
+	path = sd-pixel-engine-event
+	url = https://github.com/Ralvie-AI/sd-pixel-engine-event.git
