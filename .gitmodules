@@ -31,3 +31,6 @@
 [submodule "sd-pixel-engine-event"]
 	path = sd-pixel-engine-event
 	url = https://github.com/Ralvie-AI/sd-pixel-engine-event.git
+[submodule "sd-ocr-event"]
+	path = sd-ocr-event
+	url = https://github.com/Ralvie-AI/sd-ocr-event.git
