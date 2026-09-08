@@ -125,7 +125,7 @@ datas += dependent_datas  # Combine datas and dependent_datas
 sd_main_a = Analysis(
     [sd_main_location / "sd_main/__main__.py"],
     pathex=[] + extra_pathex,
-    binaries=None,
+    binaries=[(os.path.join(Path("."), "scripts/dylib/libsqlcipher.0.dylib"), '.'), ],
     datas=datas,
     hiddenimports=["PySide6"],
     hookspath=[],
@@ -206,6 +206,17 @@ sd_pixel_engine_a = Analysis(
     cipher=block_cipher,
 )
 
+sd_pixel_engine_event_a = Analysis(
+    ["sd-pixel-engine-event/sd_pixel_engine_event/__main__.py"],
+    pathex=[],
+    binaries=None,
+    datas=None,
+    hiddenimports=[],
+    hookspath=[],
+    runtime_hooks=[],
+    excludes=["shapely", "shapely.geos"],
+    cipher=block_cipher,
+)
 
 # https://pythonhosted.org/PyInstaller/spec-files.html#multipackage-bundles
 # MERGE takes a bit weird arguments, it wants tuples which consists of
@@ -342,7 +353,34 @@ sd_pixel_engine_coll = COLLECT(
     name="sd-pixel-engine",
 )
 
+sd_pixel_engine_event_pyz = PYZ(
+    sd_pixel_engine_event_a.pure,
+    sd_pixel_engine_event_a.zipped_data,
+    cipher=block_cipher
+)
 
+sd_pixel_engine_event_exe = EXE(
+    sd_pixel_engine_event_pyz,
+    sd_pixel_engine_event_a.scripts,
+    exclude_binaries=True,
+    name="sd-pixel-engine-event",
+    debug=False,
+    strip=False,
+    upx=True,
+    console=True,
+    entitlements_file=entitlements_file,
+    codesign_identity=codesign_identity,
+)
+
+sd_pixel_engine_event_coll = COLLECT(
+    sd_pixel_engine_event_exe,
+    sd_pixel_engine_event_a.binaries,
+    sd_pixel_engine_event_a.zipfiles,
+    sd_pixel_engine_event_a.datas,
+    strip=False,
+    upx=True,
+    name="sd-pixel-engine-event",
+)
 
 if platform.system() == "Darwin":
     app = BUNDLE(
@@ -351,6 +389,7 @@ if platform.system() == "Darwin":
         sda_coll,
         sds_coll,
         sd_pixel_engine_coll,
+        sd_pixel_engine_event_coll,
      
         name="Sundial.app",
         icon=icon,
