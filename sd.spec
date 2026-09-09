@@ -218,6 +218,18 @@ sd_pixel_engine_event_a = Analysis(
     cipher=block_cipher,
 )
 
+sd_ocr_event_a = Analysis(
+    ["sd-ocr-event/sd_ocr_event/__main__.py"],
+    pathex=[],
+    binaries=[('libgeos_c.1.dylib', '.')],
+    datas=[(rapidocr_path / "default_models.yaml", "rapidocr"), (rapidocr_path / "models", "rapidocr/models"), (rapidocr_path / "config.yaml", "rapidocr"),],
+    hiddenimports=["rapidocr", "onnxruntime", "torch", "openvino", "shapely", "shapely.geometry",],
+    hookspath=["hooks"],
+    runtime_hooks=[],
+    excludes=[],
+    cipher=block_cipher,
+)
+
 # https://pythonhosted.org/PyInstaller/spec-files.html#multipackage-bundles
 # MERGE takes a bit weird arguments, it wants tuples which consists of
 # the analysis paired with the script name and the bin name
@@ -382,6 +394,35 @@ sd_pixel_engine_event_coll = COLLECT(
     name="sd-pixel-engine-event",
 )
 
+sd_ocr_event_pyz = PYZ(
+    sd_ocr_event_a.pure,
+    sd_ocr_event_a.zipped_data,
+    cipher=block_cipher
+)
+
+sd_ocr_event_exe = EXE(
+    sd_ocr_event_pyz,
+    sd_ocr_event_a.scripts,
+    exclude_binaries=True,
+    name="sd-ocr-event",
+    debug=False,
+    strip=False,
+    upx=True,
+    console=True,
+    entitlements_file=entitlements_file,
+    codesign_identity=codesign_identity,
+)
+
+sd_ocr_event_coll = COLLECT(
+    sd_ocr_event_exe,
+    sd_ocr_event_a.binaries,
+    sd_ocr_event_a.zipfiles,
+    sd_ocr_event_a.datas,
+    strip=False,
+    upx=True,
+    name="sd-ocr-event",
+)
+
 if platform.system() == "Darwin":
     app = BUNDLE(
         sdq_coll,
@@ -390,7 +431,8 @@ if platform.system() == "Darwin":
         sds_coll,
         sd_pixel_engine_coll,
         sd_pixel_engine_event_coll,
-     
+        sd_ocr_event_coll,
+
         name="Sundial.app",
         icon=icon,
         bundle_identifier="net.ralvie.Sundial",
@@ -406,3 +448,4 @@ if platform.system() == "Darwin":
             # "CFBundleShortVersionString": current_release.lstrip('v'),
         },
     )
+ 
