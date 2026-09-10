@@ -168,6 +168,10 @@ package: github_version
 			make --directory=$$dir build; \
 			make --directory=$$dir package; \
 			python sd-ocr-activity/scripts/test.py; \
+		elif [ "$$dir" == "sd-ocr-event" ]; then \
+			make --directory=$$dir build; \
+			make --directory=$$dir package; \
+			python sd-ocr-event/scripts/test.py; \
 		elif [ "$$dir" == "sd-pixel-engine" ]; then \
 			make --directory=$$dir build; \
 			make --directory=$$dir package; \
@@ -239,5 +243,3 @@ clean_all: clean
 clean-auto:
 	rm -rIv **/sd-android/mobile/build
 	rm -rIfv **/node_modules
-
-
