@@ -192,6 +192,12 @@ package: github_version
 		--name sd-log-cleaner \
 		log-cleaner/cleanup_log.py
 
+	python -m PyInstaller \
+		--clean \
+		--onefile \
+		--name sd-eventscreenshot-cleaner \
+		clean-ocr-screenshot/cleanup_screenshot.py
+
 # Remove problem-causing binaries
 	rm -f dist/Sundial/libdrm.so.2       # see: https://github.com/Sundial/Sundial/issues/161
 	rm -f dist/Sundial/libharfbuzz.so.0  # see: https://github.com/Sundial/Sundial/issues/660#issuecomment-959889230
@@ -221,6 +227,7 @@ package: github_version
 	mv dist/Sundial/sd-qt.exe dist/Sundial/sd-main.exe
 	cp -r scripts/dlls/lib* dist/Sundial/PySide6/	
 	mv dist/sd-log-cleaner.exe dist/Sundial/
+	mv dist/sd-eventscreenshot-cleaner.exe dist/Sundial/
 	 
 # Builds zips and setups
 	bash scripts/package/package-all.sh
