@@ -28,6 +28,11 @@ def main():
         help="User ID",
     )
     parser.add_argument(
+            "company_id",
+            type=str,
+            help="Company ID",
+        )
+    parser.add_argument(
         "timestamp",
         type=str,
         help='Timestamp in ISO format, e.g. "2026-09-17 03:47:08.972000+00:00"',
@@ -49,6 +54,7 @@ def main():
         / "Sundial"
         / "EventScreenshots"
         / args.user_id
+        / args.company_id
     )
 
     if not screenshot_dir.exists():
