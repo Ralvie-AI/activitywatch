@@ -25,7 +25,7 @@ github_version:
 
 SHELL := /usr/bin/env bash
 
-SUBMODULES := sd-ocr-activity sd-ocr-event sd-pixel-engine sd-pixel-engine-event sd-core sd-client sd-server sd-watcher-afk sd-watcher-window sd-qt
+SUBMODULES := sd-ocr-activity sd-ocr-event sd-pixel-engine sd-pixel-engine-event sd-core sd-client sd-server sd-watcher-afk sd-watcher-window sd-main
 
 # Include extras if sd_EXTRAS is true
 ifeq ($(sd_EXTRAS),true)
@@ -76,7 +76,7 @@ build: github_version
 # Installs things like desktop/menu shortcuts.
 # Might in the future configure autostart on the system.
 install:
-	make --directory=sd-qt install
+	make --directory=sd-main install
 # Installation is already happening in the `make build` step currently.
 # We might want to change this.
 # We should also add some option to install as user (pip3 install --user)
@@ -128,9 +128,9 @@ test-integration:
 	@echo "== Integration testing sd-server =="
 	@pytest ./scripts/tests/integration_tests.py ./sd-server/tests/ -v
 
-ICON := "sd-qt/media/logo/logo.png"
+ICON := "sd-main/media/logo/logo.png"
 
-sd-qt/media/logo/logo.icns:
+sd-main/media/logo/logo.icns:
 	mkdir -p build/MyIcon.iconset
 	sips -z 16 16     $(ICON) --out build/MyIcon.iconset/icon_16x16.png
 	sips -z 32 32     $(ICON) --out build/MyIcon.iconset/icon_16x16@2x.png
@@ -144,9 +144,9 @@ sd-qt/media/logo/logo.icns:
 	cp				  $(ICON)       build/MyIcon.iconset/icon_512x512@2x.png
 	iconutil -c icns build/MyIcon.iconset
 	rm -R build/MyIcon.iconset
-	mv build/MyIcon.icns sd-qt/media/logo/logo.icns
+	mv build/MyIcon.icns sd-main/media/logo/logo.icns
 
-dist/Sundial.app: sd-qt/media/logo/logo.icns
+dist/Sundial.app: sd-main/media/logo/logo.icns
 	pyinstaller --clean --noconfirm sd.spec
 
 dist/Sundial.dmg: dist/Sundial.app
@@ -203,7 +203,7 @@ package: github_version
 	rm -f dist/Sundial/libharfbuzz.so.0  # see: https://github.com/Sundial/Sundial/issues/660#issuecomment-959889230
 # These should be provided by the distro itself
 # Had to be removed due to otherwise causing the error:
-#   sd-qt: symbol lookup error: /opt/Sundial/libQt5XcbQpa.so.5: undefined symbol: FT_Get_Font_Format
+#   sd-main: symbol lookup error: /opt/Sundial/libQt5XcbQpa.so.5: undefined symbol: FT_Get_Font_Format
 	rm -f dist/Sundial/libfontconfig.so.1
 	rm -f dist/Sundial/libfreetype.so.6
 # Remove unnecessary files
@@ -223,8 +223,7 @@ package: github_version
 	rm -rf dist/Sundial/PySide6/translations/qtwebengine_locales/*.pak 
 	cp dist/Sundial/PySide6/translations/qtwebengine_locales/en-US.tmp dist/Sundial/PySide6/translations/qtwebengine_locales/en-US.pak
 	rm -rf dist/Sundial/PySide6/translations/qtwebengine_locales/*.tmp
-	rm -rf dist/Sundial/sd-qt.desktop
-	mv dist/Sundial/sd-qt.exe dist/Sundial/sd-main.exe
+	rm -rf dist/Sundial/sd-main.desktop
 	cp -r scripts/dlls/lib* dist/Sundial/PySide6/	
 	mv dist/sd-log-cleaner.exe dist/Sundial/
 	mv dist/sd-eventscreenshot-cleaner.exe dist/Sundial/
