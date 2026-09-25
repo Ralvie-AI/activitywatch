@@ -13,7 +13,7 @@ python = "^3.8,<3.13"
 #sd-watcher-afk = {path = "sd-watcher-afk"}
 #aw-watcher-window = {path = "sd-watcher-window"}
 #sd-server = {path = "sd-server"}
-#aw-qt = {path = "sd-qt"}
+#aw-qt = {path = "sd-main"}
 
 # https://github.com/ionrock/cachecontrol/issues/292
 urllib3 = "<2"

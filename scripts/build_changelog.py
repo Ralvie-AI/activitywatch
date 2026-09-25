@@ -61,7 +61,7 @@ def main():
         "sd-webui",
         "sd-watcher-afk",
         "sd-watcher-window",
-        "sd-qt",
+        "sd-main",
         "sd-core",
         "sd-client",
     ]
