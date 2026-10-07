@@ -12,6 +12,7 @@ import flask_restx
 import rapidocr
 
 rapidocr_path = Path(rapidocr.__file__).parent
+excludes_package = ["PySide6.QtWebEngineWidgets", "PySide6.QtWebEngineCore"]
 
 current_release = subprocess.run(
     shlex.split("git describe --tags --abbrev=0"),
@@ -93,7 +94,7 @@ sd_server_a = Analysis(
     "shapely.geometry",
     ],
     runtime_hooks=[],
-    excludes=[],
+    excludes=excludes_package,
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
@@ -130,7 +131,7 @@ sd_main_a = Analysis(
     hiddenimports=["PySide6"],
     hookspath=[],
     runtime_hooks=[],
-    excludes=["shapely", "shapely.geos"],
+    excludes=["shapely", "shapely.geos", *excludes_package],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
@@ -165,7 +166,7 @@ sd_watcher_afk_a = Analysis(
     ],
     hookspath=[],
     runtime_hooks=[],
-    excludes=["shapely", "shapely.geos"],
+    excludes=["shapely", "shapely.geos", *excludes_package],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
@@ -188,7 +189,7 @@ sd_watcher_window_a = Analysis(
     hiddenimports=[],
     hookspath=[],
     runtime_hooks=[],
-    excludes=["shapely", "shapely.geos"],
+    excludes=["shapely", "shapely.geos", *excludes_package],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
@@ -202,7 +203,7 @@ sd_pixel_engine_a = Analysis(
     hiddenimports=[],
     hookspath=[],
     runtime_hooks=[],
-    excludes=["shapely", "shapely.geos"],
+    excludes=["shapely", "shapely.geos", *excludes_package],
     cipher=block_cipher,
 )
 
@@ -214,7 +215,7 @@ sd_pixel_engine_event_a = Analysis(
     hiddenimports=[],
     hookspath=[],
     runtime_hooks=[],
-    excludes=["shapely", "shapely.geos"],
+    excludes=["shapely", "shapely.geos", *excludes_package],
     cipher=block_cipher,
 )
 
@@ -226,7 +227,7 @@ sd_ocr_event_a = Analysis(
     hiddenimports=["rapidocr", "onnxruntime", "torch", "openvino", "shapely", "shapely.geometry",],
     hookspath=["hooks"],
     runtime_hooks=[],
-    excludes=[],
+    excludes=excludes_package,
     cipher=block_cipher,
 )
 
