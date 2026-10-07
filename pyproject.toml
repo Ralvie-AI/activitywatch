@@ -34,7 +34,7 @@ pyinstaller = "^5.13"
 pyinstaller-hooks-contrib = {git = "https://github.com/pyinstaller/pyinstaller-hooks-contrib.git", branch="master"}
 
 # Won't be respected due to https://github.com/python-poetry/poetry/issues/1584
-#setuptools = ">49.1.1"  # needed due to https://github.com/pypa/setuptools/issues/1963
+setuptools = "68.2.2"  # needed due to https://github.com/pypa/setuptools/issues/1963
 
 [build-system]
 requires = ["poetry-core"]
