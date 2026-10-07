@@ -153,7 +153,7 @@ package:
 # Move sd-main to the root of the dist folder
 	mv dist/Sundial/sd-main sd-main-tmp
 	mv sd-main-tmp/* dist/Sundial
-	rmdir sd-main-tmp
+	rm -rf sd-main-tmp
 # Remove problem-causing binaries
 	rm -f dist/Sundial/libdrm.so.2       # see: https://github.com/ActivityWatch/activitywatch/issues/161
 	rm -f dist/Sundial/libharfbuzz.so.0  # see: https://github.com/ActivityWatch/activitywatch/issues/660#issuecomment-959889230
