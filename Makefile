@@ -21,8 +21,6 @@ github_version:
 	
 	@echo RELEASE_VERSION=\"$$RELEASE_VERSION\" > sd-core/sd_core/version.py
 
-	python -c "import secrets; open('sd-core/sd_core/salt_file.py', 'w').write(f'MY_SALT = \"{secrets.token_hex(32)}\"\n')"	
-
 SHELL := /usr/bin/env bash
 
 SUBMODULES := sd-ocr-activity sd-ocr-event sd-pixel-engine sd-pixel-engine-event sd-core sd-client sd-server sd-watcher-afk sd-watcher-window sd-main
