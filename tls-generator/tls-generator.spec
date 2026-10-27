@@ -4,7 +4,7 @@
 block_cipher = None
 
 
-a = Analysis(['tls_generator/tls_generator.py'],
+a = Analysis(['tls_generator/__main__.py'],
              pathex=[],
              binaries=None,
              datas=None,
