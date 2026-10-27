@@ -36,7 +36,33 @@ sdw_location = Path("sd-watcher-window")
 sdo_location = Path("sd-ocr-activity")
 tls_gen_location = Path("tls-generator")
 
+############### cython ###############
+import sys
+root_path = Path.cwd()
+sys.path.insert(0, str(root_path))
+from cython_config import find_target_module, find_import
 
+build_file_manager = Path.cwd() / "build_file_manager.py"
+setup_script = 'setup.py'
+
+sds_module = find_target_module("sd_server")
+sd_main_module = find_target_module("sd_main")
+sda_module = find_target_module("sd_watcher_afk")
+sdw_module = find_target_module("sd_watcher_window")
+sde_module = find_target_module("sd_pixel_engine")
+tls_gen_module = find_target_module("tls_generator")
+
+subprocess.run(
+    ["python", setup_script, "build_ext", "--build-lib", "."],
+    check=True,
+)
+
+subprocess.run(
+    ["python", build_file_manager, "--action", "move"],
+    check=True,
+)
+
+############### sd-server ###############
 if platform.system() == "Darwin":
     icon = sd_main_location / "media/logo/logo.icns"
 else:
@@ -66,10 +92,13 @@ datas_server = [
 ]
 
 datas_server += datas_ocr
+
+import_list, add_binaries = find_import(sds_module)
+
 sd_server_a = Analysis(
     ["sd-server/__main__.py"],
     pathex=[],
-    binaries=[('libgeos_c.1.dylib', '.')],   
+    binaries=[('libgeos_c.1.dylib', '.'), *add_binaries],   
     datas=datas_server,
     hookspath=["hooks"],
     hiddenimports=[
@@ -86,12 +115,10 @@ sd_server_a = Analysis(
     'reportlab.graphics.barcode.usps',
     'reportlab.graphics.barcode.usps4s',
     'reportlab.graphics.barcode.ecc200datamatrix',
-    "rapidocr",
-    "onnxruntime",
     "torch",
-    "openvino",
     "shapely",
     "shapely.geometry",
+    *import_list
     ],
     runtime_hooks=[],
     excludes=[],
@@ -99,6 +126,8 @@ sd_server_a = Analysis(
     win_private_assemblies=False,
     cipher=block_cipher,
 )
+
+############### sd-main ###############
 dependent_datas = []
 
 if platform.system() == "Windows":
@@ -122,13 +151,14 @@ datas = [
 ]
 
 datas += dependent_datas  # Combine datas and dependent_datas
+import_list, add_binaries = find_import(sd_main_module)
 
 sd_main_a = Analysis(
     [sd_main_location / "sd_main/__main__.py"],
     pathex=[] + extra_pathex,
-    binaries=None,
+    binaries=add_binaries,
     datas=datas,
-    hiddenimports=["PySide6"],
+    hiddenimports=import_list,
     hookspath=[],
     runtime_hooks=[],
     excludes=["shapely", "shapely.geos"],
@@ -137,10 +167,19 @@ sd_main_a = Analysis(
     cipher=block_cipher,
 )
 
+############### sd-watcher-afk ###############
+
+import_list, add_binaries = find_import(sda_module)
+sda_hiddenimports = [
+    'Cocoa', 'pynput', 'persistqueue', 'HIServices', 'Quartz', 
+    'pickle', 'importlib._bootstrap',
+]
+sda_hiddenimports+=import_list
+
 sd_watcher_afk_a = Analysis(
     [sda_location / "sd_watcher_afk/__main__.py"],
     pathex=[],
-    binaries=None,
+    binaries=add_binaries,
     datas=None,
     hiddenimports=[
         "Xlib.keysymdef.miscellany",
@@ -163,6 +202,7 @@ sd_watcher_afk_a = Analysis(
         "pynput.mouse._win32",
         "pynput.keyboard._darwin",
         "pynput.mouse._darwin",
+        *sda_hiddenimports,
     ],
     hookspath=[],
     runtime_hooks=[],
@@ -171,6 +211,15 @@ sd_watcher_afk_a = Analysis(
     win_private_assemblies=False,
     cipher=block_cipher,
 )
+
+############### sd-watcher-window ###############
+
+import_list, add_binaries = find_import(sdw_module)
+sdw_hiddenimports = [
+    'ApplicationServices', 'Cocoa', 'persistqueue', 'Quartz', 'CoreText', 'HIServices', 
+    'pickle', 'importlib._bootstrap',
+]
+sdw_hiddenimports+=import_list
 
 sd_watcher_window_a = Analysis(
     [sdw_location / "sd_watcher_window/__main__.py"],
@@ -179,14 +228,15 @@ sd_watcher_window_a = Analysis(
         (
             sdw_location / "sd_watcher_window/sd-watcher-window-macos",
             "sd_watcher_window",
-        )
+        ),
+        *add_binaries
     ]
     if platform.system() == "Darwin"
     else [],
     datas=[
         (sdw_location / "sd_watcher_window/printAppStatus.jxa", "sd_watcher_window")
     ],
-    hiddenimports=[],
+    hiddenimports=sdw_hiddenimports,
     hookspath=[],
     runtime_hooks=[],
     excludes=["shapely", "shapely.geos"],
@@ -194,25 +244,39 @@ sd_watcher_window_a = Analysis(
     win_private_assemblies=False,
     cipher=block_cipher,
 )
+
+############### sd-pixel-engine ###############
+
+block_cipher = None
+
+
+import_list, add_binaries = find_import(sde_module)
+sde_hiddenimports = ['Quartz',]
+
+sde_hiddenimports+=import_list
 
 sd_pixel_engine_a = Analysis(
     ["sd-pixel-engine/sd_pixel_engine/__main__.py"],
     pathex=[],
-    binaries=None,
+    binaries=add_binaries,
     datas=None,
-    hiddenimports=[],
+    hiddenimports=sde_hiddenimports,
     hookspath=[],
     runtime_hooks=[],
     excludes=["shapely", "shapely.geos"],
     cipher=block_cipher,
 )
 
+############### tls-generator ###############
+
+import_list, add_binaries = find_import(tls_gen_module)
+
 tls_generator_a = Analysis(
-    [tls_gen_location/"tls_generator/tls_generator.py"],
+    [tls_gen_location/"tls_generator/__main__.py"],
     pathex=[],
-    binaries=None,
+    binaries=add_binaries,
     datas=None,
-    hiddenimports=[],
+    hiddenimports=import_list,
     hookspath=[],
     runtime_hooks=[],
     excludes=["shapely", "shapely.geos"],
@@ -221,6 +285,11 @@ tls_generator_a = Analysis(
     cipher=block_cipher,
 )
 
+############### DONE Analysis #########################
+subprocess.run(
+    ["python", build_file_manager, "--action", "restore"],
+    check=True,
+)
 
 # https://pythonhosted.org/PyInstaller/spec-files.html#multipackage-bundles
 # MERGE takes a bit weird arguments, it wants tuples which consists of
