@@ -8,44 +8,34 @@ import keyring
 import platform
 import subprocess
 import os
-
+import time
 from cryptography import x509
 from cryptography.x509.oid import NameOID, ExtendedKeyUsageOID
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-from sd_core.const import TLS_SERVICE_NAME, TLS_DIR, CERT_FILE, KEY_FILE, TLS_ACCOUNT_NAME, PASSWORD
+from sd_core.const import TLS_SERVICE_NAME, TLS_DIR, CERT_FILE, KEY_FILE, CERT_FILE_SWIFT
 from sd_core.log import setup_logging
 import logging
+from sd_core.cache import get_password, add_password, keychain_item_exists, delete_password
 
 logger = logging.getLogger(__name__)
-setup_logging("tls-generator", log_file=True)
 
 def setup_and_save_keychain():
     """
     Create a new Keychain Access and save in Keychain Access
     """
-    logger.debug('[tls] Setting a new keychain')
+    logger.info('[tls-exe] Setting a new keychain')
     # 1. create key AES-256
     raw_key = AESGCM.generate_key(bit_length=256)
     
     # 2. convert to Hex for save at Keychai
     hex_key = raw_key.hex()
-    
+
     # 3. save at Keychain
-    keyring.set_password(TLS_SERVICE_NAME, TLS_ACCOUNT_NAME, hex_key)
+    add_password(TLS_SERVICE_NAME, hex_key)
 
-    with open(PASSWORD, "w") as f:
-        f.write(hex_key)
-        
-
-def get_keychain():
-
-    with open(PASSWORD, "r") as f:
-        password = f.read()
-
-    return bytes.fromhex(password)
 
 def encrypt(data: bytes, key: bytes) -> bytes:
     nonce = os.urandom(12)
@@ -74,14 +64,26 @@ def decrypt(data: bytes, key: bytes) -> bytes:
 
 def generate():
 
-    TLS_DIR.mkdir(parents=True, exist_ok=True)
+    setup_logging("tls-generator", log_file=True)
+    
+    logger.info('[tls-exe] Generate...')
 
-    if (PASSWORD.exists()):
-        logger.debug('[tls] already have PASSWORD')
-        load_private_key()
+    # if all([CERT_FILE.exists(), KEY_FILE.exists(), CERT_FILE_SWIFT.exists(), TLS_DIR.exists()]):
+    #     return
+
+    TLS_DIR.mkdir(parents=True, exist_ok=True)
+    #del files for verify
+    CERT_FILE.unlink(missing_ok=True)
+    CERT_FILE_SWIFT.unlink(missing_ok=True)
+    KEY_FILE.unlink(missing_ok=True)
+
+    if keychain_item_exists(TLS_SERVICE_NAME):
+        logger.info('[tls-exe] already have PASSWORD - Delete it')
+        delete_password(TLS_SERVICE_NAME)
     else:
-        logger.debug('[tls] Must create new')
-        setup_and_save_keychain()
+        logger.info('[tls-exe] Must create new')
+
+    setup_and_save_keychain()
 
 
     # Generate RSA private key
@@ -168,9 +170,11 @@ def generate():
     # Protect the PEM using AESGCM
     protected_key = encrypt(
         private_key_pem,
-        get_keychain()
+        bytes.fromhex(get_password(TLS_SERVICE_NAME))
     )
 
+    logger.info('[tls-exe] Writing File...')
+    
     # Write certificate
     with open(CERT_FILE, "wb") as f:
         f.write(
@@ -179,30 +183,27 @@ def generate():
             )
         )
 
-    # Write DPAPI-protected private key
+    # Write certificate for .swift use
+    with open(CERT_FILE_SWIFT, "wb") as f:
+        f.write(
+            cert.public_bytes(
+                serialization.Encoding.DER
+            )
+        )
+
+    # Write private key
     with open(KEY_FILE, "wb") as f:
         f.write(protected_key)
 
+    #verify that have complete files
+    while not all([CERT_FILE.exists(), KEY_FILE.exists(), CERT_FILE_SWIFT.exists()]):
+        logger.info('Incomplete files.')
+        logger.info('Creating The new one.')
+        generate()
+        time.sleep(1)
+
     return private_key_pem
 
-# ----------------------------------------------------------------------
-# Loading the private key
-# ----------------------------------------------------------------------
-
-def load_private_key():
-
-    protected_key = KEY_FILE.read_bytes()
-
-    private_key_pem = decrypt(
-        protected_key,
-        get_keychain()
-    )
-
-    return serialization.load_pem_private_key(
-        private_key_pem,
-        password=None,
-    )  
 
 if __name__ == '__main__':
     generate()
-    load_private_key()
