@@ -37,9 +37,15 @@ def main():
         type=str,
         help='Timestamp in ISO format, e.g. "2026-09-17 03:47:08.972000+00:00"',
     )
+    parser.add_argument(
+        "event",
+        type=str.lower,
+        choices=["yes", "no"],
+        default="yes",
+        help="Whether to process event screenshots (yes/no)",
+    )
     args = parser.parse_args()
 
-    # Parse timestamp
     try:
         cutoff_dt = datetime.fromisoformat(args.timestamp)
     except ValueError as e:
@@ -60,14 +66,25 @@ def main():
     if not screenshot_dir.exists():
         sys.exit(f"Directory does not exist: {screenshot_dir}")
 
-    for file_path in screenshot_dir.glob("*.png"):
-        file_timestamp = get_file_timestamp(file_path)
-
-        if file_timestamp and file_timestamp < cutoff_dt:
-            try:
-                file_path.unlink()
-            except OSError as err:
-                print(f"Failed to delete {file_path.name}: {err}")
+    if args.event == "yes":
+        for file_path in screenshot_dir.glob("*.png"):
+            file_timestamp = get_file_timestamp(file_path)
+            if file_timestamp and file_timestamp < cutoff_dt:
+                try:
+                    file_path.unlink()
+                except OSError as err:
+                    print(f"Failed to delete {file_path.name}: {err}")
+    else:
+        for file_path in screenshot_dir.glob("*.png"):
+            file_timestamp = get_file_timestamp(file_path)
+            if file_timestamp and file_timestamp > cutoff_dt:
+                try:
+                    file_path.unlink()
+                except OSError as err:
+                    print(f"Failed to delete {file_path.name}: {err}")
 
 if __name__ == "__main__":
     main()
+
+    # python cleanup_screenshot.py "840c895a938ec8cc9f455b89eba91465" "56741d09ff09b3c626fc467fa4734a54" "2026-11-11 03:26:27.828000+00:00" "no"
+    
